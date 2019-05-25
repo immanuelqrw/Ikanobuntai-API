@@ -86,6 +86,12 @@ CREATE TABLE "BattleRating" (
   CHECK ("defenderTitleId" <> "challengerTitleId")
 ) INHERITS ("TableBase");
 
+CREATE TYPE RESULT AS ENUM (
+    'WIN',
+    'DRAW',
+    'LOSS'
+);
+
 CREATE TABLE "Battle" (
   "id" BIGSERIAL PRIMARY KEY,
   "defenderId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
@@ -186,7 +192,7 @@ CREATE TABLE "PokemonGeneration" (
   "specialDefenseBaseStat" SMALLINT NOT NULL CHECK ("specialDefenseBaseStat" BETWEEN 0 AND 255),
   "speedBaseStat" SMALLINT NOT NULL CHECK ("speedBaseStat" BETWEEN 0 AND 255),
   "abilityId" BIGINT REFERENCES "Ability" ("id"),
-  "secondAbilityId" BIGINT REFERENCES "Ability" ("id"),
+  "alternateAbilityId" BIGINT REFERENCES "Ability" ("id"),
   "hiddenAbilityId" BIGINT REFERENCES "Ability" ("id")
 ) INHERITS ("TableBase");
 
