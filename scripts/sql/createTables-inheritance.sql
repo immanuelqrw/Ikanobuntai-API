@@ -191,9 +191,10 @@ CREATE TABLE "PokemonGeneration" (
   "specialAttackBaseStat" SMALLINT NOT NULL CHECK ("specialAttackBaseStat" BETWEEN 0 AND 255),
   "specialDefenseBaseStat" SMALLINT NOT NULL CHECK ("specialDefenseBaseStat" BETWEEN 0 AND 255),
   "speedBaseStat" SMALLINT NOT NULL CHECK ("speedBaseStat" BETWEEN 0 AND 255),
-  "abilityId" BIGINT REFERENCES "Ability" ("id"),
+  "abilityId" BIGINT NOT NULL REFERENCES "Ability" ("id"),
   "alternateAbilityId" BIGINT REFERENCES "Ability" ("id"),
-  "hiddenAbilityId" BIGINT REFERENCES "Ability" ("id")
+  "hiddenAbilityId" BIGINT REFERENCES "Ability" ("id"),
+  "spriteUri" VARCHAR(256) NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonTier" (
