@@ -44,9 +44,17 @@ CREATE TABLE "Configuration" (
   CONSTRAINT "uq_name_tier" UNIQUE ("name", "tierId")
 ) INHERITS ("TableBase");
 
+CREATE TABLE "LeagueFormat" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "name" VARCHAR(64) NOT NULL UNIQUE,
+  "description" VARCHAR(256) NOT NULL,
+  "hasRuleset" BOOLEAN NOT NULL DEFAULT FALSE
+) INHERITS ("TableBase");
+
 CREATE TABLE "League" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR(64) NOT NULL UNIQUE,
+  "formatId" BIGINT NOT NULL REFERENCES "LeagueFormat" ("id"),
   "stageId" BIGINT NOT NULL REFERENCES "Stage" ("id"),
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id"),
   "eloId" BIGINT NOT NULL REFERENCES "Elo" ("id")
@@ -138,6 +146,17 @@ CREATE TABLE "IndividualValue" (
   "speed" SMALLINT NOT NULL CHECK ("speed" BETWEEN 0 AND 31)
 ) INHERITS ("TableBase");
 
+CREATE TABLE "EffortValue" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "hp" SMALLINT NOT NULL CHECK ("hp" BETWEEN 0 AND 252),
+  "attack" SMALLINT NOT NULL CHECK ("attack" BETWEEN 0 AND 252),
+  "defense" SMALLINT NOT NULL CHECK ("defense" BETWEEN 0 AND 252),
+  "specialAttack" SMALLINT NOT NULL CHECK ("specialAttack" BETWEEN 0 AND 252),
+  "specialDefense" SMALLINT NOT NULL CHECK ("specialDefense" BETWEEN 0 AND 252),
+  "speed" SMALLINT NOT NULL CHECK ("speed" BETWEEN 0 AND 252),
+  CHECK ("hp" + "attack" + "defense" + "specialAttack" + "specialDefense" + "speed" <= 510)
+) INHERITS ("TableBase");
+
 CREATE TYPE POKETYPE AS ENUM (
   'GRASS',
   'FIRE',
@@ -205,13 +224,41 @@ CREATE TABLE "PokemonTier" (
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id")
 ) INHERITS ("TableBase");
 
+CREATE TYPE DAMAGE AS ENUM(
+  'PHYSICAL',
+  'SPECIAL',
+  'STATUS'
+);
+
+CREATE TABLE "Move" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "name" VARCHAR(32) NOT NULL UNIQUE,
+  "type" POKETYPE NOT NULL,
+  "damage" DAMAGE NOT NULL,
+  "accuracy" SMALLINT CHECK ("accuracy" BETWEEN 0 AND 100),
+  "pp" SMALLINT NOT NULL CHECK ("pp" BETWEEN 1 AND 56),
+  "effect" VARCHAR(128)
+) INHERITS ("TableBase");
+
+-- ? Should I validate that a move is possible
+-- ! Add check that no moves are repeated
 CREATE TABLE "TrainerPokemon" (
   "id" BIGSERIAL PRIMARY KEY,
+  "name" VARCHAR(32),
   "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
   "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "natureId" BIGINT NOT NULL REFERENCES "Nature" ("id"),
   "abilityId" BIGINT NOT NULL REFERENCES "Ability" ("id"),
-  "individualValueId" BIGINT NOT NULL REFERENCES "IndividualValue" ("id")
+  "individualValueId" BIGINT NOT NULL REFERENCES "IndividualValue" ("id"),
+  "effortValueId" BIGINT NOT NULL REFERENCES "EffortValue" ("id"),
+  "move1Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
+  "move2Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
+  "move3Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
+  "move4Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
+  "happiness" SMALLINT NOT NULL DEFAULT 255 CHECK ("happiness" BETWEEN 0 AND 255),
+  "isShiny" BOOLEAN NOT NULL DEFAULT FALSE,
+  "level" SMALLINT NOT NULL DEFAULT 100 CHECK ("level" BETWEEN 0 AND 100)
 ) INHERITS ("TableBase");
 
 -- Team
+
