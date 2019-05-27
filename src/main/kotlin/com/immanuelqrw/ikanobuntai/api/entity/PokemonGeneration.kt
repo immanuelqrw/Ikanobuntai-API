@@ -1,6 +1,7 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.setOfNotNull
 
 data class PokemonGeneration(
     val pokemon: Pokemon,
@@ -19,4 +20,10 @@ data class PokemonGeneration(
     val alternateAbility: Ability?,
     val hiddenAbility: Ability?,
     val spriteUri: String
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val types: Set<Type> by lazy {
+        setOfNotNull(mainType, subType)
+    }
+
+}

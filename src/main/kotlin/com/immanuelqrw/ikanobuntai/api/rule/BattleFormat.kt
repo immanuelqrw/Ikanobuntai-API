@@ -15,5 +15,5 @@ interface BattleFormat {
     /**
      * Checks to see if teams are valid for format
      */
-    fun verify(pokemonTeam: PokemonTeam): Boolean
+    fun verify(pokemonTeam: PokemonTeam, limiter: Any? = null): Boolean
 }
