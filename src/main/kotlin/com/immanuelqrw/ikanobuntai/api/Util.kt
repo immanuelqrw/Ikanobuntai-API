@@ -1,5 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api
 
+// ! Add to Nucleus-Util package
 
 /**
  * Returns a new read-only set either of single given element, if it is not null, or empty set if the element is null. The returned set is serializable (JVM).
