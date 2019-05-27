@@ -16,5 +16,6 @@ data class TrainerPokemon(
     val mode4: Move?,
     val happiness: Int = 255,
     val isShiny: Boolean = false,
-    val level: Int = 100
+    val level: Int = 100,
+    val item: Item?
 ) : BaseUniqueEntity()
