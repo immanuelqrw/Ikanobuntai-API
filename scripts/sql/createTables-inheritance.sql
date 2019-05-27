@@ -273,5 +273,12 @@ CREATE TABLE "TrainerPokemon" (
   "itemId" BIGINT NOT NULL REFERENCES "Item" ("id")
 ) INHERITS ("TableBase");
 
+-- - Enforce limitation on amount of registered pokemon for each league
+CREATE TABLE "LeaguePokemon" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "trainerPokemonId" BIGINT NOT NULL REFERENCES "TrainerPokemon" ("id"),
+  "leagueId" BIGINT NOT NULL REFERENCES "League" ("id")
+) INHERITS ("TableBase");
+
 -- Team
 
