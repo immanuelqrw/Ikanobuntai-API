@@ -4,7 +4,7 @@ import com.immanuelqrw.core.entity.BaseUniqueEntity
 
 data class TrainerPokemon(
     val name: String?,
-    val pokemon: Pokemon,
+    val pokemonGeneration: PokemonGeneration,
     val trainer: Trainer,
     val nature: Nature,
     val ability: Ability,

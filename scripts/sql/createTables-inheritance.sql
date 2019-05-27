@@ -257,7 +257,7 @@ CREATE TABLE "Move" (
 CREATE TABLE "TrainerPokemon" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR(32),
-  "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
+  "pokemonGenerationId" BIGINT NOT NULL REFERENCES "PokemonGeneration" ("id"),
   "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "natureId" BIGINT NOT NULL REFERENCES "Nature" ("id"),
   "abilityId" BIGINT NOT NULL REFERENCES "Ability" ("id"),
