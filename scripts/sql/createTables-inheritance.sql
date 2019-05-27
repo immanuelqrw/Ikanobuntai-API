@@ -6,6 +6,7 @@ CREATE TABLE "TableBase" (
 );
 
 -- TRAINER tables
+-- ! Replace with unique index
 
 CREATE TABLE "Elo" (
   "id" BIGSERIAL PRIMARY KEY,
@@ -204,7 +205,7 @@ CREATE TABLE "PokemonTier" (
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id")
 ) INHERITS ("TableBase");
 
-CREATE TABLE "PokemonTrainer" (
+CREATE TABLE "TrainerPokemon" (
   "id" BIGSERIAL PRIMARY KEY,
   "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
   "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
