@@ -44,7 +44,7 @@ CREATE TABLE "Configuration" (
   CONSTRAINT "uq_name_tier" UNIQUE ("name", "tierId")
 ) INHERITS ("TableBase");
 
-CREATE TABLE "LeagueFormat" (
+CREATE TABLE "Format" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "description" VARCHAR(256) NOT NULL,
@@ -54,10 +54,15 @@ CREATE TABLE "LeagueFormat" (
 CREATE TABLE "League" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" VARCHAR(64) NOT NULL UNIQUE,
-  "formatId" BIGINT NOT NULL REFERENCES "LeagueFormat" ("id"),
   "stageId" BIGINT NOT NULL REFERENCES "Stage" ("id"),
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id"),
   "eloId" BIGINT NOT NULL REFERENCES "Elo" ("id")
+) INHERITS ("TableBase");
+
+CREATE TABLE "LeagueFormat" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
+  "formatId" BIGINT NOT NULL REFERENCES "Format" ("id")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerUser" (
