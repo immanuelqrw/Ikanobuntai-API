@@ -1,1 +1,3 @@
 CREATE DATABASE "Ikanobuntai";
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

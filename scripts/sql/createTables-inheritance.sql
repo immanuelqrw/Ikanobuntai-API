@@ -9,34 +9,34 @@ CREATE TABLE "TableBase" (
 -- ! Replace with unique index
 
 CREATE TABLE "Elo" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "divider" SMALLINT NOT NULL,
   "k" SMALLINT NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Rank" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Tier" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Stage" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Title" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Configuration" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL,
   "value" VARCHAR(64) NOT NULL,
   "type" VARCHAR(32) NOT NULL,
@@ -45,14 +45,14 @@ CREATE TABLE "Configuration" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Format" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "description" VARCHAR(256) NOT NULL,
   "hasRuleset" BOOLEAN NOT NULL DEFAULT FALSE
 ) INHERITS ("TableBase");
 
 CREATE TABLE "League" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "stageId" BIGINT NOT NULL REFERENCES "Stage" ("id"),
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id"),
@@ -60,13 +60,13 @@ CREATE TABLE "League" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "LeagueFormat" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
   "formatId" BIGINT NOT NULL REFERENCES "Format" ("id")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerUser" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "email" VARCHAR(300) NOT NULL UNIQUE,
   "passwordHash" CHAR(64) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE "TrainerUser" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Trainer" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "trainerUserId" BIGINT NOT NULL REFERENCES "TrainerUser" ("id"),
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id"),
@@ -84,7 +84,7 @@ CREATE TABLE "Trainer" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerTitle" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "titleId" BIGINT NOT NULL REFERENCES "Title" ("id"),
   "wonOn" TIMESTAMP NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE "TrainerTitle" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "BattleRating" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "defenderTitleId" BIGINT NOT NULL REFERENCES "Title" ("id"),
   "challengerTitleId" BIGINT NOT NULL REFERENCES "Title" ("id"),
   "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
@@ -107,7 +107,7 @@ CREATE TYPE RESULT AS ENUM (
 );
 
 CREATE TABLE "Battle" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "defenderId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "winnerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
@@ -120,7 +120,7 @@ CREATE TABLE "Battle" (
 -- POKEMON tables
 
 CREATE TABLE "Ability" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32) NOT NULL UNIQUE,
   "description" VARCHAR(256) NOT NULL
 ) INHERITS ("TableBase");
@@ -135,14 +135,14 @@ CREATE TYPE STAT AS ENUM (
 );
 
 CREATE TABLE "Nature" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(20) NOT NULL UNIQUE,
   "dropStat" STAT,
   "riseStat" STAT
 ) INHERITS ("TableBase");
 
 CREATE TABLE "IndividualValue" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "hp" SMALLINT NOT NULL CHECK ("hp" BETWEEN 0 AND 31),
   "attack" SMALLINT NOT NULL CHECK ("attack" BETWEEN 0 AND 31),
   "defense" SMALLINT NOT NULL CHECK ("defense" BETWEEN 0 AND 31),
@@ -152,7 +152,7 @@ CREATE TABLE "IndividualValue" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "EffortValue" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "hp" SMALLINT NOT NULL CHECK ("hp" BETWEEN 0 AND 252),
   "attack" SMALLINT NOT NULL CHECK ("attack" BETWEEN 0 AND 252),
   "defense" SMALLINT NOT NULL CHECK ("defense" BETWEEN 0 AND 252),
@@ -184,7 +184,7 @@ CREATE TYPE POKETYPE AS ENUM (
 );
 
 CREATE TABLE "Generation" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "number" SMALLINT NOT NULL,
   "region" VARCHAR(8) NOT NULL
 ) INHERITS ("TableBase");
@@ -192,7 +192,7 @@ CREATE TABLE "Generation" (
 -- TODO Add smogon tier generation connection -- separate join table with generation
 -- TODO add unique indexes
 CREATE TABLE "Pokemon" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "number" VARCHAR(4) NOT NULL, -- maybe change to int
   "name" VARCHAR(32) NOT NULL,
   "form" VARCHAR(32),
@@ -203,7 +203,7 @@ CREATE TABLE "Pokemon" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonGeneration" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
   "generationId" BIGINT NOT NULL REFERENCES "Generation" ("id"),
   "mainType" POKETYPE NOT NULL,
@@ -223,14 +223,14 @@ CREATE TABLE "PokemonGeneration" (
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonTier" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
   "generationId" BIGINT NOT NULL REFERENCES "Generation" ("id"),
   "tierId" BIGINT NOT NULL REFERENCES "Tier" ("id")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Item" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "effect" VARCHAR(128) NOT NULL
 ) INHERITS ("TableBase");
@@ -243,7 +243,7 @@ CREATE TYPE DAMAGE AS ENUM(
 );
 
 CREATE TABLE "Move" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32) NOT NULL UNIQUE,
   "type" POKETYPE NOT NULL,
   "damage" DAMAGE NOT NULL,
@@ -255,7 +255,7 @@ CREATE TABLE "Move" (
 -- ? Should I validate that a move is possible
 -- ! Add check that no moves are repeated
 CREATE TABLE "TrainerPokemon" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32),
   "pokemonGenerationId" BIGINT NOT NULL REFERENCES "PokemonGeneration" ("id"),
   "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
@@ -275,7 +275,7 @@ CREATE TABLE "TrainerPokemon" (
 
 -- - Enforce limitation on amount of registered pokemon for each league
 CREATE TABLE "LeaguePokemon" (
-  "id" BIGSERIAL PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "trainerPokemonId" BIGINT NOT NULL REFERENCES "TrainerPokemon" ("id"),
   "leagueId" BIGINT NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
