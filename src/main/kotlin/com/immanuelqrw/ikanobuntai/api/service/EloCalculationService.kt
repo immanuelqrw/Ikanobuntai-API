@@ -1,8 +1,7 @@
-package com.immanuelqrw.ikanobuntai.api
+package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
-import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import org.springframework.stereotype.Service
 import kotlin.math.pow
 
@@ -20,12 +19,7 @@ class EloCalculationService {
         private const val CONVERSION_BASE = 10.0
     }
 
-    data class BattleTrainers(
-        val defender: Trainer,
-        val challenger: Trainer
-    )
-
-    private data class BattleElo(
+    data class BattleElo(
         val defenderElo: Int,
         val challengerElo: Int
     )
@@ -54,7 +48,7 @@ class EloCalculationService {
         return BattleElo(defenderElo.toInt(), challengerElo.toInt())
     }
 
-    private fun calculateBattle(battle: Battle): BattleTrainers {
+    fun calculateBattle(battle: Battle): BattleElo {
         val defender = battle.defender
         val challenger = battle.challenger
         val kFactor = battle.value
@@ -72,12 +66,7 @@ class EloCalculationService {
         val defenderE = calculateE(defenderR, challengerR)
         val challengerE = calculateE(challengerR, defenderR)
 
-        val battleElo = calculateChange(defenderE, challengerE, sFactor, kFactor)
-
-        val modifiedDefender = defender.copy(rating = defender.rating + battleElo.defenderElo)
-        val modifiedChallenger = challenger.copy(rating = challenger.rating + battleElo.challengerElo)
-
-        return BattleTrainers(modifiedDefender, modifiedChallenger)
+        return calculateChange(defenderE, challengerE, sFactor, kFactor)
     }
 
 }
