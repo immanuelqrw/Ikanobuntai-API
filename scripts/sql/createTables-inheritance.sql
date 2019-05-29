@@ -252,8 +252,6 @@ CREATE TABLE "Move" (
   "effect" VARCHAR(128)
 ) INHERITS ("TableBase");
 
--- ? Should I validate that a move is possible
--- ! Add check that no moves are repeated
 CREATE TABLE "TrainerPokemon" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32),
@@ -264,9 +262,9 @@ CREATE TABLE "TrainerPokemon" (
   "individualValueId" BIGINT NOT NULL REFERENCES "IndividualValue" ("id"),
   "effortValueId" BIGINT NOT NULL REFERENCES "EffortValue" ("id"),
   "move1Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
-  "move2Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
-  "move3Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
-  "move4Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
+  "move2Id" BIGINT REFERENCES "Move" ("id"),
+  "move3Id" BIGINT REFERENCES "Move" ("id"),
+  "move4Id" BIGINT REFERENCES "Move" ("id"),
   "happiness" SMALLINT NOT NULL DEFAULT 255 CHECK ("happiness" BETWEEN 0 AND 255),
   "isShiny" BOOLEAN NOT NULL DEFAULT FALSE,
   "level" SMALLINT NOT NULL DEFAULT 100 CHECK ("level" BETWEEN 0 AND 100),

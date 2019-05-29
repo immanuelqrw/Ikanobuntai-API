@@ -2,6 +2,8 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 
+// ? Should I validate that a move is possible
+// ! Add check that no moves are repeated
 data class TrainerPokemon(
     val name: String?,
     val pokemonGeneration: PokemonGeneration,
