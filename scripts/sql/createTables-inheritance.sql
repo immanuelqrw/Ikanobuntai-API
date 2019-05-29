@@ -109,7 +109,7 @@ CREATE TABLE "Battle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "defenderId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
-  "winnerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
+  "winnerId" BIGINT REFERENCES "Trainer" ("id"),
   "rankId" BIGINT NOT NULL REFERENCES "Rank" ("id"),
   "value" SMALLINT NOT NULL,
   "foughtOn" TIMESTAMP NOT NULL,
