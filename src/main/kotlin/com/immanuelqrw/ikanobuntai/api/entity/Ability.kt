@@ -4,5 +4,5 @@ import com.immanuelqrw.core.entity.BaseUniqueEntity
 
 data class Ability(
     val name: String,
-    val description: String
+    val effect: String
 ) : BaseUniqueEntity()

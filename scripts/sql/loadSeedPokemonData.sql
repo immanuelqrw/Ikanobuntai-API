@@ -1,6 +1,6 @@
 -- ABILITY
 INSERT INTO
-  "Ability" ("name", "description")
+  "Ability" ("name", "effect")
 VALUES
   ('Adaptability', 'Powers up moves of the same type.'),
   ('Aerilate', 'Turns Normal-type moves into Flying-type moves.'),

@@ -121,7 +121,7 @@ CREATE TABLE "Battle" (
 CREATE TABLE "Ability" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32) NOT NULL UNIQUE,
-  "description" VARCHAR(256) NOT NULL
+  "effect" VARCHAR(256) NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TYPE STAT AS ENUM (
