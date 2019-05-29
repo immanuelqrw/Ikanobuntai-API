@@ -1,6 +1,7 @@
 package com.immanuelqrw.ikanobuntai.api.controller
 
 import com.immanuelqrw.core.api.controller.BaseUniqueController
+import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.service.BattleService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +19,7 @@ class BattleController : BaseUniqueController<Battle>() {
     private lateinit var battleService: BattleService
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    override fun create(@RequestBody entity: Battle): Battle {
+    fun create(@RequestBody entity: PokemonBattle): Battle {
         return battleService.create(entity)
     }
 
