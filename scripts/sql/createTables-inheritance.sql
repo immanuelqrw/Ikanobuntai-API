@@ -6,7 +6,6 @@ CREATE TABLE "TableBase" (
 );
 
 -- TRAINER tables
--- ! Replace with unique index
 
 CREATE TABLE "Elo" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -193,13 +192,14 @@ CREATE TABLE "Generation" (
 -- TODO add unique indexes
 CREATE TABLE "Pokemon" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "number" VARCHAR(4) NOT NULL, -- maybe change to int
+  "number" SMALLINT NOT NULL,
   "name" VARCHAR(32) NOT NULL,
   "form" VARCHAR(32),
   "isLegendary" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMythical" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMega" BOOLEAN NOT NULL DEFAULT FALSE,
-  "prevolvedPokemonId" BIGINT REFERENCES "Pokemon" ("id")
+  "prevolvedPokemonId" BIGINT REFERENCES "Pokemon" ("id"),
+  UNIQUE ("name", "form")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonGeneration" (
