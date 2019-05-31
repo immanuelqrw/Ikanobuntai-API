@@ -15,7 +15,7 @@ class PokemonService {
     fun findByNameForm(name: String, form: String?): Pokemon? {
         val page = PageRequest.of(1, 1)
 
-        return pokemonService.findAll(page, "name:$name;form:$form").content.firstOrNull()
+        return pokemonService.findAll(page, "name:$name;form:${form ?: ""}").content.firstOrNull()
     }
 
 }
