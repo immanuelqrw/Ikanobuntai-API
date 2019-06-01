@@ -277,6 +277,3 @@ CREATE TABLE "LeaguePokemon" (
   "trainerPokemonId" BIGINT NOT NULL REFERENCES "TrainerPokemon" ("id"),
   "leagueId" BIGINT NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
-
--- Team
-

@@ -1,0 +1,35 @@
+# ACTIONS
+
+[All]
+{CRUD} Battle <untiered>
+{CRU} Battle <scheduled>
+{R} League table
+{CRUD} User <self>
+{CRUD} Pokemon Team
+{R} Pokemon
+{R} Pokemon Information [Generation, IV, EV, Tier, Moves, etc.]
+{R} User Information [Pokemon, Teams, Title, Rank, Tier, Elo, etc.]
+{R} League Information
+{R} Battles
+
+{R} Rank
+{R} Title
+{R} Tier
+{R} Stage
+{R} Format
+{R} Nature
+{R} Item
+{R} Move
+{R} Rank
+{R} Rank
+{R} Rank
+
+[Admin]
+{CUD} League
+{UD} User
+{CU} Rank
+{CU} Title
+{CU} Tier
+{CU} Stage
+{CU} Format
+{D} Battle <scheduled>
