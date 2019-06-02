@@ -108,20 +108,20 @@ CREATE TABLE "League" (
   "type" LEAGUE_TYPE NOT NULL,
   "stage" STAGE NOT NULL,
   "tier" TIER NOT NULL,
-  "eloId" BIGINT NOT NULL REFERENCES "Elo" ("id")
+  "eloId" UUID NOT NULL REFERENCES "Elo" ("id")
 ) INHERITS ("TableBase");
 
 -- - Add seed data
 CREATE TABLE "LeagueFormat" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
-  "formatId" BIGINT NOT NULL REFERENCES "Format" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
+  "formatId" UUID NOT NULL REFERENCES "Format" ("id"),
   UNIQUE("leagueId", "formatId")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Configuration" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "leagueFormatId" BIGINT NOT NULL REFERENCES "LeagueFormat" ("id") UNIQUE,
+  "leagueFormatId" UUID NOT NULL REFERENCES "LeagueFormat" ("id") UNIQUE,
   "value" VARCHAR(64) NOT NULL,
   "type" VARCHAR(32) NOT NULL
 ) INHERITS ("TableBase");
@@ -138,7 +138,7 @@ CREATE TABLE "TrainerUser" (
 CREATE TABLE "Trainer" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
-  "trainerUserId" BIGINT NOT NULL REFERENCES "TrainerUser" ("id"),
+  "trainerUserId" UUID NOT NULL REFERENCES "TrainerUser" ("id"),
   "tier" TIER NOT NULL,
   "rank" RANK NOT NULL,
   "rating" SMALLINT NOT NULL DEFAULT 1000 CHECK ("rating" >= 1000)
@@ -146,17 +146,17 @@ CREATE TABLE "Trainer" (
 
 CREATE TABLE "TrainerTitle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
-  "titleId" BIGINT NOT NULL REFERENCES "TierTitle" ("id"),
+  "trainerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "titleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
   "wonOn" TIMESTAMP NOT NULL,
   "lostOn" TIMESTAMP
 ) INHERITS ("TableBase");
 
 CREATE TABLE "BattleRating" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "defenderTitleId" BIGINT NOT NULL REFERENCES "TierTitle" ("id"),
-  "challengerTitleId" BIGINT NOT NULL REFERENCES "TierTitle" ("id"),
-  "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
+  "defenderTitleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
+  "challengerTitleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
   "value" SMALLINT NOT NULL,
   CHECK ("defenderTitleId" <> "challengerTitleId")
 ) INHERITS ("TableBase");
@@ -184,9 +184,9 @@ CREATE TYPE BATTLE_TYPE AS ENUM(
 CREATE TABLE "Battle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "type" BATTLE_TYPE NOT NULL,
-  "defenderId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
-  "challengerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
-  "winnerId" BIGINT REFERENCES "Trainer" ("id"),
+  "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "winnerId" UUID REFERENCES "Trainer" ("id"),
   "rank" RANK NOT NULL,
   "value" SMALLINT NOT NULL,
   "foughtOn" TIMESTAMP NOT NULL,
@@ -281,13 +281,13 @@ CREATE TABLE "Pokemon" (
   "isLegendary" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMythical" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMega" BOOLEAN NOT NULL DEFAULT FALSE,
-  "prevolvedPokemonId" BIGINT REFERENCES "Pokemon" ("id"),
+  "prevolvedPokemonId" UUID REFERENCES "Pokemon" ("id"),
   UNIQUE ("name", "form")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonGeneration" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
+  "pokemonId" UUID NOT NULL REFERENCES "Pokemon" ("id"),
   "generation" GENERATION NOT NULL,
   "mainType" POKETYPE NOT NULL,
   "subType" POKETYPE,
@@ -299,15 +299,15 @@ CREATE TABLE "PokemonGeneration" (
   "specialAttackBaseStat" SMALLINT NOT NULL CHECK ("specialAttackBaseStat" BETWEEN 0 AND 255),
   "specialDefenseBaseStat" SMALLINT NOT NULL CHECK ("specialDefenseBaseStat" BETWEEN 0 AND 255),
   "speedBaseStat" SMALLINT NOT NULL CHECK ("speedBaseStat" BETWEEN 0 AND 255),
-  "abilityId" BIGINT NOT NULL REFERENCES "Ability" ("id"),
-  "alternateAbilityId" BIGINT REFERENCES "Ability" ("id"),
-  "hiddenAbilityId" BIGINT REFERENCES "Ability" ("id"),
+  "abilityId" UUID NOT NULL REFERENCES "Ability" ("id"),
+  "alternateAbilityId" UUID REFERENCES "Ability" ("id"),
+  "hiddenAbilityId" UUID REFERENCES "Ability" ("id"),
   "spriteUri" VARCHAR(256) NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TABLE "PokemonTier" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "pokemonId" BIGINT NOT NULL REFERENCES "Pokemon" ("id"),
+  "pokemonId" UUID NOT NULL REFERENCES "Pokemon" ("id"),
   "generation" GENERATION NOT NULL,
   "tier" TIER NOT NULL
 ) INHERITS ("TableBase");
@@ -338,25 +338,25 @@ CREATE TABLE "Move" (
 CREATE TABLE "TrainerPokemon" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32),
-  "pokemonGenerationId" BIGINT NOT NULL REFERENCES "PokemonGeneration" ("id"),
-  "trainerId" BIGINT NOT NULL REFERENCES "Trainer" ("id"),
-  "natureId" BIGINT NOT NULL REFERENCES "Nature" ("id"),
-  "abilityId" BIGINT NOT NULL REFERENCES "Ability" ("id"),
-  "individualValueId" BIGINT NOT NULL REFERENCES "IndividualValue" ("id"),
-  "effortValueId" BIGINT NOT NULL REFERENCES "EffortValue" ("id"),
-  "move1Id" BIGINT NOT NULL REFERENCES "Move" ("id"),
-  "move2Id" BIGINT REFERENCES "Move" ("id"),
-  "move3Id" BIGINT REFERENCES "Move" ("id"),
-  "move4Id" BIGINT REFERENCES "Move" ("id"),
+  "pokemonGenerationId" UUID NOT NULL REFERENCES "PokemonGeneration" ("id"),
+  "trainerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "natureId" UUID NOT NULL REFERENCES "Nature" ("id"),
+  "abilityId" UUID NOT NULL REFERENCES "Ability" ("id"),
+  "individualValueId" UUID NOT NULL REFERENCES "IndividualValue" ("id"),
+  "effortValueId" UUID NOT NULL REFERENCES "EffortValue" ("id"),
+  "move1Id" UUID NOT NULL REFERENCES "Move" ("id"),
+  "move2Id" UUID REFERENCES "Move" ("id"),
+  "move3Id" UUID REFERENCES "Move" ("id"),
+  "move4Id" UUID REFERENCES "Move" ("id"),
   "happiness" SMALLINT NOT NULL DEFAULT 255 CHECK ("happiness" BETWEEN 0 AND 255),
   "isShiny" BOOLEAN NOT NULL DEFAULT FALSE,
   "level" SMALLINT NOT NULL DEFAULT 100 CHECK ("level" BETWEEN 0 AND 100),
-  "itemId" BIGINT NOT NULL REFERENCES "Item" ("id")
+  "itemId" UUID NOT NULL REFERENCES "Item" ("id")
 ) INHERITS ("TableBase");
 
 -- - Enforce limitation on amount of registered pokemon for each league
 CREATE TABLE "LeaguePokemon" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "trainerPokemonId" BIGINT NOT NULL REFERENCES "TrainerPokemon" ("id"),
-  "leagueId" BIGINT NOT NULL REFERENCES "League" ("id")
+  "trainerPokemonId" UUID NOT NULL REFERENCES "TrainerPokemon" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
