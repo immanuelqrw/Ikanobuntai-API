@@ -4,7 +4,6 @@ import com.immanuelqrw.core.entity.BaseUniqueEntity
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
@@ -21,7 +20,7 @@ data class TrainerTitle(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "`titleId`", referencedColumnName = "`id`")
-    val title: Title,
+    val tierTitle: TierTitle,
 
     @DateTimeFormat
     val wonOn: LocalDateTime?,
