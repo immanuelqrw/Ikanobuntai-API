@@ -15,7 +15,7 @@ class EloCalculationService {
         private const val S_FACTOR_LOSS = 0.0
 
         // - Consider changing standard value
-        private const val CONVERSION_EXP = 400.0
+        private const val STANDARD_DEVIATION = 400.0
         private const val CONVERSION_BASE = 10.0
     }
 
@@ -29,7 +29,7 @@ class EloCalculationService {
         val challengerValue: Double
     )
 
-    private fun calculateR(elo: Int): Double = CONVERSION_BASE.pow(elo / CONVERSION_EXP)
+    private fun calculateR(elo: Int): Double = CONVERSION_BASE.pow(elo / STANDARD_DEVIATION)
 
     private fun calculateE(trainerR: Double, opponentR: Double): Double = trainerR / (trainerR + opponentR)
 
