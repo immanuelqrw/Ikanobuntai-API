@@ -24,6 +24,10 @@ class BattleService {
     @Autowired
     private lateinit var eloCalculationService: EloCalculationService
 
+    @Autowired
+    private lateinit var rankService: RankService
+
+    // ! Add title shift
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)
         val challenger = trainerService.findByName(pokemonBattle.challenger)
@@ -44,15 +48,21 @@ class BattleService {
             foughtOn = pokemonBattle.foughtOn
         )
 
-        val (defenderChange, challengerChange) = eloCalculationService.calculateBattle(battle)
+        val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(battle)
 
         val createdBattle: Battle = battleService.create(battle)
 
-        val defenderEloChange: Map<String, Int> = mapOf("rating" to defenderChange)
-        unitTrainerService.modify(battle.defender.id!!, defenderEloChange)
+        val defenderChange: Map<String, Any> = mapOf(
+            "rating" to defenderEloChange,
+            "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defender.rank)
+        )
+        unitTrainerService.modify(battle.defender.id!!, defenderChange)
 
-        val challengerEloChange: Map<String, Int> = mapOf("rating" to challengerChange)
-        unitTrainerService.modify(battle.challenger.id!!, challengerEloChange)
+        val challengerChange: Map<String, Any> = mapOf(
+            "rating" to challengerEloChange,
+            "rank" to rankService.checkRank(challenger.id!!, defenderEloChange, challenger.rank)
+        )
+        unitTrainerService.modify(battle.challenger.id!!, challengerChange)
 
         return createdBattle
     }
