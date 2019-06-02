@@ -1,15 +1,12 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-import com.immanuelqrw.core.entity.BaseUniqueEntity
-import javax.persistence.Entity
-import javax.persistence.Table
-
-@Entity
-@Table(name = "`Generation`")
-data class Generation(
-
-    val number: Int,
-
-    val region: String
-
-) : BaseUniqueEntity()
+enum class Generation(val number: Int) {
+    KANTO(1),
+    JOHTO(2),
+    HOENN(3),
+    SINNOH(4),
+    UNOVA(5),
+    KALOS(6),
+    ALOLA(7),
+    GALAR(8)
+}

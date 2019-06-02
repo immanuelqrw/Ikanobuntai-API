@@ -22,9 +22,6 @@ class BattleService {
     private lateinit var unitTrainerService: UnitTrainerService
 
     @Autowired
-    private lateinit var rankService: RankService
-
-    @Autowired
     private lateinit var eloCalculationService: EloCalculationService
 
     fun create(pokemonBattle: PokemonBattle): Battle {
@@ -35,13 +32,14 @@ class BattleService {
             pokemonBattle.challenger -> challenger
             else -> null
         }
-        val rank: Rank? = rankService.findByName(pokemonBattle.rank)
+        val rank: Rank = pokemonBattle.rank
 
         val battle = Battle(
+            type = pokemonBattle.type,
             defender = defender!!,
             challenger = challenger!!,
             winner = winner,
-            rank = rank!!,
+            rank = rank,
             value = pokemonBattle.value,
             foughtOn = pokemonBattle.foughtOn
         )

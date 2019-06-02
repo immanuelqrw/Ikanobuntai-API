@@ -1,8 +1,8 @@
 package com.immanuelqrw.ikanobuntai.api.service.unit
 
 import com.immanuelqrw.core.api.service.BaseUniqueService
-import com.immanuelqrw.ikanobuntai.api.entity.Tier
+import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 import org.springframework.stereotype.Service
 
 @Service
-class TierService : BaseUniqueService<Tier>()
+class TierTitleService : BaseUniqueService<TierTitle>()

@@ -1,23 +1,32 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-import com.immanuelqrw.core.entity.BaseUniqueEntity
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-
-@Entity
-@Table(name = "`Title`")
-data class Title(
-
-    @Column(unique = true)
-    val name: String,
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`tierId`", referencedColumnName = "`id`")
-    val tier: Tier
-
-) : BaseUniqueEntity()
+enum class Title {
+    GYM_LEADER,
+    LEAGUE_RANKED_05,
+    ELITE_FOUR,
+    LEAGUE_BARON,
+    LEAGUE_CHAMPION,
+    ARENA_TYCOON,
+    DOME_ACE,
+    FACTORY_HEAD,
+    PALACE_MAVEN,
+    PIKE_QUEEN,
+    PYRAMID_KING,
+    SALON_MAIDEN,
+    TOWER_TYCOON,
+    ARCADE_STAR,
+    CASTLE_VALET,
+    HALL_MATRON,
+    WORLD_RANKED_10,
+    WORLD_RANKED_09,
+    WORLD_RANKED_08,
+    WORLD_RANKED_07,
+    WORLD_RANKED_06,
+    WORLD_RANKED_05,
+    WORLD_RANKED_04,
+    WORLD_RANKED_03,
+    WORLD_RANKED_02,
+    WORLD_RANKED_01,
+    WORLD_NOBLE,
+    WORLD_CHAMPION
+}

@@ -3,7 +3,6 @@ package com.immanuelqrw.ikanobuntai.api.entity
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 import com.immanuelqrw.ikanobuntai.api.setOfNotNull
 import javax.persistence.CascadeType
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
 import javax.persistence.FetchType
@@ -19,8 +18,7 @@ data class PokemonGeneration(
     @JoinColumn(name = "`pokemonId`", referencedColumnName = "`id`")
     val pokemon: Pokemon,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`generationId`", referencedColumnName = "`id`")
+    @Enumerated
     val generation: Generation,
 
     @Enumerated

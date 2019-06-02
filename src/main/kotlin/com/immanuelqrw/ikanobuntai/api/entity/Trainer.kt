@@ -4,6 +4,7 @@ import com.immanuelqrw.core.entity.BaseUniqueEntity
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
@@ -20,12 +21,10 @@ data class Trainer(
     @JoinColumn(name = "`trainerUserId`", referencedColumnName = "`id`")
     val trainerUser: TrainerUser,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`tierId`", referencedColumnName = "`id`")
+    @Enumerated
     val tier: Tier,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`rankId`", referencedColumnName = "`id`")
+    @Enumerated
     val rank: Rank,
 
     val rating: Int = 1000

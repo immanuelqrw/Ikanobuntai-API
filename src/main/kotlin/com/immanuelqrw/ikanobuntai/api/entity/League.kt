@@ -4,6 +4,7 @@ import com.immanuelqrw.core.entity.BaseUniqueEntity
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
@@ -16,12 +17,13 @@ data class League(
     @Column(unique = true)
     val name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`stageId`", referencedColumnName = "`id`")
+    @Enumerated
+    val type: LeagueType,
+
+    @Enumerated
     val stage: Stage,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`tierId`", referencedColumnName = "`id`")
+    @Enumerated
     val tier: Tier,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])

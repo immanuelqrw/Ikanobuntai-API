@@ -13,15 +13,10 @@ class ConfigurationService {
     @Autowired
     private lateinit var moveService: UnitMoveService
 
-    @Autowired
-    private lateinit var tierService: TierService
-
-    fun findByNameTier(name: String, tierName: String): Move? {
+    fun findByNameTier(name: String, tier: Tier): Move? {
         val page = PageRequest.of(1, 1)
 
-        val tier: Tier? = tierService.findByName(tierName)
-
-        return moveService.findAll(page, "name:$name;tier:${tier?.id}").content.firstOrNull()
+        return moveService.findAll(page, "name:$name;tier:${tier.name}").content.firstOrNull()
     }
 
 }
