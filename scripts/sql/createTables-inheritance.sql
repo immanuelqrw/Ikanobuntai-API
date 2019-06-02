@@ -87,15 +87,6 @@ CREATE TABLE "TierTitle" (
   "title" TITLE NOT NULL
 ) INHERITS ("TableBase");
 
-CREATE TABLE "Configuration" (
-  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "name" VARCHAR(64) NOT NULL,
-  "value" VARCHAR(64) NOT NULL,
-  "type" VARCHAR(32) NOT NULL,
-  "tier" TIER NOT NULL,
-  CONSTRAINT "uq_name_tier" UNIQUE ("name", "tier")
-) INHERITS ("TableBase");
-
 CREATE TABLE "Format" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
@@ -120,10 +111,19 @@ CREATE TABLE "League" (
   "eloId" BIGINT NOT NULL REFERENCES "Elo" ("id")
 ) INHERITS ("TableBase");
 
+-- - Add seed data
 CREATE TABLE "LeagueFormat" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "leagueId" BIGINT NOT NULL REFERENCES "League" ("id"),
-  "formatId" BIGINT NOT NULL REFERENCES "Format" ("id")
+  "formatId" BIGINT NOT NULL REFERENCES "Format" ("id"),
+  UNIQUE("leagueId", "formatId")
+) INHERITS ("TableBase");
+
+CREATE TABLE "Configuration" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "leagueFormatId" BIGINT NOT NULL REFERENCES "LeagueFormat" ("id") UNIQUE,
+  "value" VARCHAR(64) NOT NULL,
+  "type" VARCHAR(32) NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerUser" (
@@ -271,8 +271,8 @@ CREATE TYPE GENERATION AS ENUM(
     'GALAR'
 );
 
--- TODO Add smogon tier generation connection -- separate join table with generation
--- TODO add unique indexes
+-- - Add smogon tier generation connection -- separate join table with generation
+-- - add unique indexes
 CREATE TABLE "Pokemon" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "number" SMALLINT NOT NULL,

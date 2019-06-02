@@ -7,9 +7,10 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "`LeagueFormat`")
+@Table(name = "`LeagueFormat`", uniqueConstraints = [UniqueConstraint(columnNames = ["`leagueId`", "`formatId`"])])
 data class LeagueFormat(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
