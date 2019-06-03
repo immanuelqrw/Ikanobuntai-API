@@ -30,11 +30,6 @@ data class Battle(
     @JoinColumn(name = "`winnerId`", referencedColumnName = "`id`")
     val winner: Trainer?,
 
-    @Enumerated
-    val rank: Rank,
-
-    val value: Int,
-
     @DateTimeFormat
     val foughtOn: LocalDateTime
 

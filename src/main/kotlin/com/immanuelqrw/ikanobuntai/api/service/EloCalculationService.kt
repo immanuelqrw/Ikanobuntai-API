@@ -48,12 +48,9 @@ class EloCalculationService {
         return BattleElo(defenderElo.toInt(), challengerElo.toInt())
     }
 
-    // ? Consider removing rank from battle
-    // ! Add rank of each trainer to battle calculation
-    fun calculateBattle(battle: Battle): BattleElo {
+    fun calculateBattle(battle: Battle, kFactor: Int): BattleElo {
         val defender = battle.defender
         val challenger = battle.challenger
-        val kFactor = battle.value
 
         val battleResult = when(battle.winner) {
             defender -> BattleResult.WIN

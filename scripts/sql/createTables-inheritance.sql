@@ -81,6 +81,7 @@ CREATE TYPE TITLE AS ENUM(
   'WORLD_CHAMPION'
 );
 
+-- - Add seed data
 CREATE TABLE "TierTitle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "tier" TIER NOT NULL,
@@ -187,8 +188,6 @@ CREATE TABLE "Battle" (
   "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "winnerId" UUID REFERENCES "Trainer" ("id"),
-  "rank" RANK NOT NULL,
-  "value" SMALLINT NOT NULL,
   "foughtOn" TIMESTAMP NOT NULL,
   CHECK ("defenderId" <> "challengerId")
 ) INHERITS ("TableBase");
