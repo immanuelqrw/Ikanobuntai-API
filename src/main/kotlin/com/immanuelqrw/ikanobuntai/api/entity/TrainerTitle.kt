@@ -23,7 +23,7 @@ data class TrainerTitle(
     val tierTitle: TierTitle,
 
     @DateTimeFormat
-    val wonOn: LocalDateTime?,
+    val wonOn: LocalDateTime,
 
     @DateTimeFormat
     val lostOn: LocalDateTime?

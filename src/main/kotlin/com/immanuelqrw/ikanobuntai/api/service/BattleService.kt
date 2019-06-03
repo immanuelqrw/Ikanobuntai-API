@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
+import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import com.immanuelqrw.ikanobuntai.api.entity.Rank
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +28,9 @@ class BattleService {
     @Autowired
     private lateinit var rankService: RankService
 
-    // ! Add title shift
+    @Autowired
+    private lateinit var trainerTitleService: TrainerTitleService
+
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)
         val challenger = trainerService.findByName(pokemonBattle.challenger)
@@ -48,21 +51,28 @@ class BattleService {
             foughtOn = pokemonBattle.foughtOn
         )
 
-        val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(battle)
-
         val createdBattle: Battle = battleService.create(battle)
 
-        val defenderChange: Map<String, Any> = mapOf(
-            "rating" to defenderEloChange,
-            "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defender.rank)
-        )
-        unitTrainerService.modify(battle.defender.id!!, defenderChange)
+        // No Elo change during title matches
+        if (battle.type == BattleType.TITLE) {
+            if (challenger == winner) {
+                trainerTitleService.transferTitle(defender, challenger, pokemonBattle.defendingTierTitle!!, pokemonBattle.foughtOn)
+            }
+        } else {
+            val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(battle)
 
-        val challengerChange: Map<String, Any> = mapOf(
-            "rating" to challengerEloChange,
-            "rank" to rankService.checkRank(challenger.id!!, defenderEloChange, challenger.rank)
-        )
-        unitTrainerService.modify(battle.challenger.id!!, challengerChange)
+            val defenderChange: Map<String, Any> = mapOf(
+                "rating" to defenderEloChange,
+                "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defender.rank)
+            )
+            unitTrainerService.modify(battle.defender.id!!, defenderChange)
+
+            val challengerChange: Map<String, Any> = mapOf(
+                "rating" to challengerEloChange,
+                "rank" to rankService.checkRank(challenger.id!!, defenderEloChange, challenger.rank)
+            )
+            unitTrainerService.modify(battle.challenger.id!!, challengerChange)
+        }
 
         return createdBattle
     }

@@ -3,6 +3,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 enum class BattleType {
     NON_RANKED,
     WILD,
+    TITLE,
     GYM,
     GYM_LEADER,
     LEAGUE_FINALIST,
