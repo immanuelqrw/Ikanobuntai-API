@@ -5,7 +5,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.Rank.*
 import com.immanuelqrw.ikanobuntai.api.entity.Title.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class RankService {
