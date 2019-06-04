@@ -26,14 +26,14 @@ class RankService {
 
     private fun checkElo(elo: Int): Rank {
         return when {
-            elo >= MASTER.elo -> MASTER
-            elo >= WORLD_RANKER.elo -> WORLD_RANKER
-            elo >= WORLD_CHALLENGER.elo -> WORLD_CHALLENGER
-            elo >= ASCENDANT.elo -> ASCENDANT
-            elo >= LEAGUE_FINALIST.elo -> LEAGUE_FINALIST
-            elo >= LEAGUE_CHALLENGER.elo -> LEAGUE_CHALLENGER
-            elo >= ACE_TRAINER.elo -> ACE_TRAINER
-            elo >= TRAINER.elo -> TRAINER
+            elo >= MASTER.minElo -> MASTER
+            elo >= WORLD_RANKER.minElo -> WORLD_RANKER
+            elo >= WORLD_CHALLENGER.minElo -> WORLD_CHALLENGER
+            elo >= ASCENDANT.minElo -> ASCENDANT
+            elo >= LEAGUE_FINALIST.minElo -> LEAGUE_FINALIST
+            elo >= LEAGUE_CHALLENGER.minElo -> LEAGUE_CHALLENGER
+            elo >= ACE_TRAINER.minElo -> ACE_TRAINER
+            elo >= TRAINER.minElo -> TRAINER
             else -> JUNIOR_TRAINER
         }
     }

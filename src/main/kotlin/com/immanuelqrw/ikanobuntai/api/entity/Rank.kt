@@ -1,7 +1,7 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-// ? Move elo to configuration file
-enum class Rank(val level: Int, val elo: Int) {
+// ? Move minElo to configuration file
+enum class Rank(val level: Int, val minElo: Int) {
     JUNIOR_TRAINER(1, 1000),
     TRAINER(2, 1100),
     ACE_TRAINER(3, 1200),
