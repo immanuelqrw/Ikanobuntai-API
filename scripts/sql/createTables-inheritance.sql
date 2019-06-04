@@ -81,12 +81,26 @@ CREATE TYPE TITLE AS ENUM(
   'WORLD_CHAMPION'
 );
 
+CREATE TABLE "Prize" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "name" VARCHAR(32) NOT NULL UNIQUE,
+  "imageUrl" VARCHAR(256) NOT NULL
+) INHERITS ("TableBase");
+
 -- - Add seed data
 CREATE TABLE "TierTitle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "tier" TIER NOT NULL,
-  "title" TITLE NOT NULL
+  "title" TITLE NOT NULL,
+  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
 ) INHERITS ("TableBase");
+
+CREATE TABLE "TrainerPrize" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "trainerId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
+  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
+) INHERITS ("TableBase");
+
 
 CREATE TABLE "Format" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -148,7 +162,7 @@ CREATE TABLE "Trainer" (
 CREATE TABLE "TrainerTitle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "trainerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
-  "titleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
+  "tierTitleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
   "wonOn" TIMESTAMP NOT NULL,
   "lostOn" TIMESTAMP
 ) INHERITS ("TableBase");
@@ -359,3 +373,4 @@ CREATE TABLE "LeaguePokemon" (
   "trainerPokemonId" UUID NOT NULL REFERENCES "TrainerPokemon" ("id"),
   "leagueId" UUID NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
+

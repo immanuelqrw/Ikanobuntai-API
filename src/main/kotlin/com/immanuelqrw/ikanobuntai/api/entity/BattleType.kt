@@ -1,16 +1,16 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-enum class BattleType {
-    NON_RANKED,
-    WILD,
-    TITLE,
-    GYM,
-    GYM_LEADER,
-    LEAGUE_FINALIST,
-    ELITE_FOUR,
-    LEAGUE_CHAMPION,
-    FRONTIER,
-    FRONTIER_BRAIN,
-    WORLD_FINALIST,
-    WORLD_CHAMPION
+enum class BattleType(val hasPrize: Boolean) {
+    NON_RANKED(false),
+    WILD(false),
+    TITLE(false),
+    GYM(false),
+    GYM_LEADER(true),
+    LEAGUE_FINALIST(false),
+    ELITE_FOUR(false),
+    LEAGUE_CHAMPION(true),
+    FRONTIER(false),
+    FRONTIER_BRAIN(true),
+    WORLD_FINALIST(false),
+    WORLD_CHAMPION(true)
 }

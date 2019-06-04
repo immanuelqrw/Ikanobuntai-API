@@ -33,6 +33,9 @@ class BattleService {
     @Autowired
     private lateinit var leagueService: LeagueService
 
+    @Autowired
+    private lateinit var trainerPrizeService: TrainerPrizeService
+
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)
         val challenger = trainerService.findByName(pokemonBattle.challenger)
@@ -57,10 +60,15 @@ class BattleService {
             if (challenger == winner) {
                 trainerTitleService.transferTitle(defender, challenger, pokemonBattle.defendingTierTitle!!, pokemonBattle.foughtOn)
             }
+        } else if (battle.type.hasPrize) {
+                if (challenger == winner) {
+                    trainerPrizeService.grantPrize(defender, challenger)
+                }
         } else {
             val league = pokemonBattle.league?.let { league ->
                 leagueService.findByName(league)
             }
+
 
             // Non League matches don't alter elo
             league?.let {

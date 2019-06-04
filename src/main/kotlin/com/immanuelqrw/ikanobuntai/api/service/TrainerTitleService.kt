@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerTitleService as UnitTrainerTitleService
 
 @Service
@@ -23,6 +23,12 @@ class TrainerTitleService {
         return trainerTitleService.findAll(page, "trainerId:$trainerId").content.firstOrNull()
     }
 
+    fun findTitleByTierTitleId(tierTitleId: UUID): TrainerTitle? {
+        val page = PageRequest.of(1, 1)
+
+        return trainerTitleService.findAll(page, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
+    }
+
     fun transferTitle(defender: Trainer, challenger: Trainer, tierTitle: TierTitle, foughtOn: LocalDateTime) {
         val defenderTitle: TrainerTitle = findTitleByTierTitleId(tierTitle.id!!)!!
 
@@ -32,12 +38,6 @@ class TrainerTitleService {
 
         trainerTitleService.replace(defenderTitle.id!!, lostDefenderTitle)
         trainerTitleService.create(wonChallengerTitle)
-    }
-
-    private fun findTitleByTierTitleId(tierTitleId: UUID): TrainerTitle? {
-        val page = PageRequest.of(1, 1)
-
-        return trainerTitleService.findAll(page, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
     }
 
 }

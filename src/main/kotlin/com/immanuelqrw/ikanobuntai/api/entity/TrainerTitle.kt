@@ -19,7 +19,7 @@ data class TrainerTitle(
     val trainer: Trainer,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`titleId`", referencedColumnName = "`id`")
+    @JoinColumn(name = "`tierTitleId`", referencedColumnName = "`id`")
     val tierTitle: TierTitle,
 
     @DateTimeFormat

@@ -17,7 +17,7 @@ data class LeaguePokemon(
     val trainerPokemon: TrainerPokemon,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`leageueId`", referencedColumnName = "`id`")
+    @JoinColumn(name = "`leagueId`", referencedColumnName = "`id`")
     val league: League
 
 ) : BaseUniqueEntity()
