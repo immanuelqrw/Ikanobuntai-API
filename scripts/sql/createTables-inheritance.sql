@@ -81,6 +81,7 @@ CREATE TYPE TITLE AS ENUM(
   'WORLD_CHAMPION'
 );
 
+-- - Add seed data
 CREATE TABLE "Prize" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(32) NOT NULL UNIQUE,
