@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.immanuelqrw.core.api.repository.BaseUniqueRepository
 import com.immanuelqrw.core.api.service.SearchService
 import com.immanuelqrw.core.api.test.unit.service.BaseUniqueServiceTest
-import com.immanuelqrw.ikanobuntai.api.entity.Elo
+import com.immanuelqrw.ikanobuntai.api.entity.TrainerRating
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -16,34 +16,34 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.util.UUID
 
 /**
- * Unit tests for EloService
+ * Unit tests for TrainerRatingService
  */
 @ExtendWith(SpringExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EloServiceTest : BaseUniqueServiceTest<Elo>() {
+class TrainerRatingServiceTest : BaseUniqueServiceTest<TrainerRating>() {
 
-    override val classType: Class<Elo> = Elo::class.java
+    override val classType: Class<TrainerRating> = TrainerRating::class.java
 
     @InjectMocks
-    override lateinit var service: EloService
+    override lateinit var service: TrainerRatingService
 
     @Mock
-    override lateinit var repository: BaseUniqueRepository<Elo>
+    override lateinit var repository: BaseUniqueRepository<TrainerRating>
 
     @Mock
-    override lateinit var searchService: SearchService<Elo>
+    override lateinit var searchService: SearchService<TrainerRating>
 
     override val validId: UUID = UUID.randomUUID()
     override val invalidId: UUID = UUID.randomUUID() // ! Need method of failing
 
     @Mock
-    override lateinit var validEntity: Elo
+    override lateinit var validEntity: TrainerRating
 
     @Mock
-    override lateinit var invalidEntity: Elo
+    override lateinit var invalidEntity: TrainerRating
 
     @Mock
-    override lateinit var replacedEntity: Elo
+    override lateinit var replacedEntity: TrainerRating
 
     @Mock
     override lateinit var validPatchedFields: Map<String, Any>
@@ -64,16 +64,16 @@ class EloServiceTest : BaseUniqueServiceTest<Elo>() {
     override lateinit var invalidPageable: Pageable
 
     @Mock
-    override lateinit var validPage: Page<Elo>
+    override lateinit var validPage: Page<TrainerRating>
 
     override val validSearch: String = "id:$validId"
     override val invalidSearch: String = "id@$validId"
 
     @Mock
-    override lateinit var validSearchSpecification: Specification<Elo>
+    override lateinit var validSearchSpecification: Specification<TrainerRating>
 
     @Mock
-    override lateinit var invalidSearchSpecification: Specification<Elo>
+    override lateinit var invalidSearchSpecification: Specification<TrainerRating>
 
     @Mock
     override lateinit var objectMapper: ObjectMapper

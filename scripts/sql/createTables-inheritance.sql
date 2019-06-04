@@ -7,12 +7,6 @@ CREATE TABLE "TableBase" (
 
 -- TRAINER tables
 
-CREATE TABLE "Elo" (
-  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "divider" SMALLINT NOT NULL,
-  "k" SMALLINT NOT NULL
-) INHERITS ("TableBase");
-
 CREATE TYPE RANK AS ENUM(
   'JUNIOR_TRAINER',
   'TRAINER',
@@ -89,16 +83,11 @@ CREATE TABLE "Prize" (
 ) INHERITS ("TableBase");
 
 -- - Add seed data
+-- - Consider adding name field for Gym Leaders
 CREATE TABLE "TierTitle" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "tier" TIER NOT NULL,
   "title" TITLE NOT NULL,
-  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
-) INHERITS ("TableBase");
-
-CREATE TABLE "TrainerPrize" (
-  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "trainerId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
   "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
 ) INHERITS ("TableBase");
 
@@ -124,7 +113,8 @@ CREATE TABLE "League" (
   "type" LEAGUE_TYPE NOT NULL,
   "stage" STAGE NOT NULL,
   "tier" TIER NOT NULL,
-  "eloId" UUID NOT NULL REFERENCES "Elo" ("id")
+  "stdDev" SMALLINT NOT NULL DEFAULT 400,
+  "kFactor" SMALLINT NOT NULL DEFAULT 32
 ) INHERITS ("TableBase");
 
 -- - Add seed data
@@ -155,9 +145,15 @@ CREATE TABLE "Trainer" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
   "trainerUserId" UUID NOT NULL REFERENCES "TrainerUser" ("id"),
+  "rank" RANK NOT NULL
+) INHERITS ("TableBase");
+
+CREATE TABLE "TrainerRating" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "trainerId" UUID NOT NULL REFERENCES "TrainerUser" ("id"),
   "tier" TIER NOT NULL,
-  "rank" RANK NOT NULL,
-  "rating" SMALLINT NOT NULL DEFAULT 1000 CHECK ("rating" >= 1000)
+  "rating" SMALLINT NOT NULL DEFAULT 1000 CHECK ("rating" >= 1000),
+  UNIQUE ("trainerId", "tier")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerTitle" (
@@ -203,6 +199,7 @@ CREATE TABLE "Battle" (
   "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "winnerId" UUID REFERENCES "Trainer" ("id"),
+  "leagueId" UUID REFERENCES "League" ("id"),
   "foughtOn" TIMESTAMP NOT NULL,
   CHECK ("defenderId" <> "challengerId")
 ) INHERITS ("TableBase");
@@ -366,6 +363,12 @@ CREATE TABLE "TrainerPokemon" (
   "isShiny" BOOLEAN NOT NULL DEFAULT FALSE,
   "level" SMALLINT NOT NULL DEFAULT 100 CHECK ("level" BETWEEN 0 AND 100),
   "itemId" UUID NOT NULL REFERENCES "Item" ("id")
+) INHERITS ("TableBase");
+
+CREATE TABLE "TrainerPrize" (
+  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "trainerId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
+  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
 ) INHERITS ("TableBase");
 
 -- - Enforce limitation on amount of registered pokemon for each league

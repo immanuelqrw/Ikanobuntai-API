@@ -2,11 +2,13 @@ package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
+import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.immanuelqrw.ikanobuntai.api.service.unit.BattleService as UnitBattleService
+import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerRatingService as UnitTrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerService as UnitTrainerService
 
 @Service
@@ -23,6 +25,12 @@ class BattleService {
 
     @Autowired
     private lateinit var eloCalculationService: EloCalculationService
+
+    @Autowired
+    private lateinit var trainerRatingService: TrainerRatingService
+
+    @Autowired
+    private lateinit var unitTrainerRatingService: UnitTrainerRatingService
 
     @Autowired
     private lateinit var rankService: RankService
@@ -45,11 +53,16 @@ class BattleService {
             else -> null
         }
 
+        val league = pokemonBattle.league?.let { league ->
+            leagueService.findByName(league)
+        }
+
         val battle = Battle(
             type = pokemonBattle.type,
             defender = defender!!,
             challenger = challenger!!,
             winner = winner,
+            league = league,
             foughtOn = pokemonBattle.foughtOn
         )
 
@@ -65,28 +78,28 @@ class BattleService {
                     trainerPrizeService.grantPrize(defender, challenger)
                 }
         } else {
-            val league = pokemonBattle.league?.let { league ->
-                leagueService.findByName(league)
-            }
-
-
             // Non League matches don't alter elo
             league?.let {
-                val kFactor = it.elo.k
+                val battleResult = when(battle.winner) {
+                    defender -> BattleResult.WIN
+                    challenger -> BattleResult.LOSS
+                    else -> BattleResult.DRAW
+                }
 
-                val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(battle, kFactor)
+                val defenderRating = trainerRatingService.findByTrainerTier(defender, it.tier)!!
+                val challengerRating = trainerRatingService.findByTrainerTier(challenger, it.tier)!!
 
-                val defenderChange: Map<String, Any> = mapOf(
-                    "rating" to defenderEloChange,
-                    "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defender.rank)
-                )
-                unitTrainerService.modify(battle.defender.id!!, defenderChange)
+                val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(defenderRating, challengerRating, battleResult, it)
 
-                val challengerChange: Map<String, Any> = mapOf(
-                    "rating" to challengerEloChange,
-                    "rank" to rankService.checkRank(challenger.id!!, defenderEloChange, challenger.rank)
-                )
-                unitTrainerService.modify(battle.challenger.id!!, challengerChange)
+                val defenderRatingChange: Map<String, Int> = mapOf("elo" to defenderEloChange)
+                unitTrainerRatingService.modify(defenderRating.id!!, defenderRatingChange)
+                val defenderRankChange: Map<String, Any> = mapOf("rank" to rankService.checkRank(defender.id!!, defenderEloChange, defender.rank))
+                unitTrainerService.modify(battle.defender.id!!, defenderRankChange)
+
+                val challengerRatingChange: Map<String, Int> = mapOf("elo" to challengerEloChange)
+                unitTrainerRatingService.modify(challengerRating.id!!, challengerRatingChange)
+                val challengerRankChange: Map<String, Any> = mapOf("rank" to rankService.checkRank(challenger.id!!, defenderEloChange, challenger.rank))
+                unitTrainerService.modify(battle.challenger.id!!, challengerRankChange)
             }
         }
 

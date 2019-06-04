@@ -1,7 +1,8 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
-import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
+import com.immanuelqrw.ikanobuntai.api.entity.League
+import com.immanuelqrw.ikanobuntai.api.entity.TrainerRating
 import org.springframework.stereotype.Service
 import kotlin.math.pow
 
@@ -48,24 +49,15 @@ class EloCalculationService {
         return BattleElo(defenderElo.toInt(), challengerElo.toInt())
     }
 
-    fun calculateBattle(battle: Battle, kFactor: Int): BattleElo {
-        val defender = battle.defender
-        val challenger = battle.challenger
-
-        val battleResult = when(battle.winner) {
-            defender -> BattleResult.WIN
-            challenger -> BattleResult.LOSS
-            else -> BattleResult.DRAW
-        }
-
+    fun calculateBattle(defenderRating: TrainerRating, challengerRating: TrainerRating, battleResult: BattleResult, league: League): BattleElo {
         val sFactor: SFactor = calculateSFactor(battleResult)
 
-        val defenderR: Double = calculateR(defender.rating)
-        val challengerR: Double = calculateR(challenger.rating)
+        val defenderR: Double = calculateR(defenderRating.elo)
+        val challengerR: Double = calculateR(challengerRating.elo)
         val defenderE = calculateE(defenderR, challengerR)
         val challengerE = calculateE(challengerR, defenderR)
 
-        return calculateChange(defenderE, challengerE, sFactor, kFactor)
+        return calculateChange(defenderE, challengerE, sFactor, league.kFactor)
     }
 
 }
