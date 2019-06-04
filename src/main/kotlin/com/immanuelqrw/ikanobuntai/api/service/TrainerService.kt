@@ -1,8 +1,8 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerService as UnitTrainerService
 
@@ -13,9 +13,7 @@ class TrainerService {
     private lateinit var trainerService: UnitTrainerService
 
     fun findByName(name: String): Trainer? {
-        val page = PageRequest.of(1, 1)
-
-        return trainerService.findAll(page, "name:$name").content.firstOrNull()
+        return trainerService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
     }
 
 }

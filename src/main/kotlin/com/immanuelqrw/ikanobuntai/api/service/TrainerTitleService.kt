@@ -1,5 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerTitle
@@ -24,9 +25,7 @@ class TrainerTitleService {
     }
 
     fun findTitleByTierTitleId(tierTitleId: UUID): TrainerTitle? {
-        val page = PageRequest.of(1, 1)
-
-        return trainerTitleService.findAll(page, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
+        return trainerTitleService.findAll(UNIQUE_PAGE_REQUEST, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
     }
 
     fun transferTitle(defender: Trainer, challenger: Trainer, tierTitle: TierTitle, foughtOn: LocalDateTime) {

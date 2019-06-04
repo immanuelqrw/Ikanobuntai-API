@@ -1,8 +1,8 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.Prize
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import com.immanuelqrw.ikanobuntai.api.service.unit.PrizeService as UnitPrizeService
 
@@ -13,9 +13,7 @@ class PrizeService {
     private lateinit var prizeService: UnitPrizeService
 
     fun findByName(name: String): Prize? {
-        val page = PageRequest.of(1, 1)
-
-        return prizeService.findAll(page, "name:$name").content.firstOrNull()
+        return prizeService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
     }
 
     // - Add image insert

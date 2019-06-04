@@ -1,5 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -13,15 +14,11 @@ class TrainerUserService {
     private lateinit var trainerUserService: UnitTrainerUserService
 
     fun findByName(name: String): TrainerUser? {
-        val page = PageRequest.of(1, 1)
-
-        return trainerUserService.findAll(page, "name:$name").content.firstOrNull()
+        return trainerUserService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
     }
 
     fun findByEmail(email: String): TrainerUser? {
-        val page = PageRequest.of(1, 1)
-
-        return trainerUserService.findAll(page, "email:$email").content.firstOrNull()
+        return trainerUserService.findAll(UNIQUE_PAGE_REQUEST, "email:$email").content.firstOrNull()
     }
 
 }
