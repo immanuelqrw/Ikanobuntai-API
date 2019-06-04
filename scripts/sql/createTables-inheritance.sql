@@ -164,15 +164,6 @@ CREATE TABLE "TrainerTitle" (
   "lostOn" TIMESTAMP
 ) INHERITS ("TableBase");
 
-CREATE TABLE "BattleRating" (
-  "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "defenderTitleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
-  "challengerTitleId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
-  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
-  "value" SMALLINT NOT NULL,
-  CHECK ("defenderTitleId" <> "challengerTitleId")
-) INHERITS ("TableBase");
-
 CREATE TYPE BATTLE_RESULT AS ENUM (
     'WIN',
     'DRAW',
