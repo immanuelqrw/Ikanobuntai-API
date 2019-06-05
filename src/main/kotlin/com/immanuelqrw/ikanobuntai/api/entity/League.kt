@@ -1,6 +1,8 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -24,6 +26,11 @@ data class League(
 
     val stdDev: Int,
 
-    val kFactor: Int
+    val kFactor: Int,
+
+    @DateTimeFormat
+    val startedOn: LocalDateTime,
+
+    val prizeMin: Int
 
 ) : BaseUniqueEntity()

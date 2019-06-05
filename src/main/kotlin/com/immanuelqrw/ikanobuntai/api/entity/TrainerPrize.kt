@@ -18,6 +18,10 @@ data class TrainerPrize(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "`prizeId`", referencedColumnName = "`id`")
-    val prize: Prize
+    val prize: Prize,
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @JoinColumn(name = "`leagueId`", referencedColumnName = "`id`")
+    val league: League
 
 ) : BaseUniqueEntity()

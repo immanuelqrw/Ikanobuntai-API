@@ -75,7 +75,7 @@ class BattleService {
             }
         } else if (battle.type.hasPrize) {
                 if (challenger == winner) {
-                    trainerPrizeService.grantPrize(defender, challenger)
+                    trainerPrizeService.grantPrize(defender, challenger, league!!)
                 }
         } else {
             // Non League matches don't alter elo

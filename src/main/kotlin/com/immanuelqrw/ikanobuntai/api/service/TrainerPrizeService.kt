@@ -1,5 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPrize
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,13 +16,14 @@ class TrainerPrizeService {
     @Autowired
     private lateinit var trainerTitleService: TrainerTitleService
 
-    fun grantPrize(defender: Trainer, challenger: Trainer) {
+    fun grantPrize(defender: Trainer, challenger: Trainer, league: League) {
         val trainerTitle = trainerTitleService.findByTrainerId(defender.id!!)
         val prize = trainerTitle!!.tierTitle.prize
 
         val trainerPrize = TrainerPrize(
             trainer = challenger,
-            prize = prize
+            prize = prize,
+            league = league
         )
 
         trainerPrizeService.create(trainerPrize)

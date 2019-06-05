@@ -114,7 +114,9 @@ CREATE TABLE "League" (
   "stage" STAGE NOT NULL,
   "tier" TIER NOT NULL,
   "stdDev" SMALLINT NOT NULL DEFAULT 400,
-  "kFactor" SMALLINT NOT NULL DEFAULT 32
+  "kFactor" SMALLINT NOT NULL DEFAULT 32,
+  "startedOn" TIMESTAMP NOT NULL,
+  "prizeMin" SMALLINT NOT NULL
 ) INHERITS ("TableBase");
 
 -- - Add seed data
@@ -359,7 +361,8 @@ CREATE TABLE "TrainerPokemon" (
 CREATE TABLE "TrainerPrize" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "trainerId" UUID NOT NULL REFERENCES "TierTitle" ("id"),
-  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id")
+  "prizeId" UUID NOT NULL REFERENCES "Prize" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
 
 -- - Enforce limitation on amount of registered pokemon for each league
