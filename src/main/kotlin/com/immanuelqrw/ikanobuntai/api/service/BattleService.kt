@@ -74,9 +74,9 @@ class BattleService {
                 trainerTitleService.transferTitle(defender, challenger, pokemonBattle.defendingTierTitle!!, pokemonBattle.foughtOn)
             }
         } else if (battle.type.hasPrize) {
-                if (challenger == winner) {
-                    trainerPrizeService.grantPrize(defender, challenger, league!!)
-                }
+            if (challenger == winner) {
+                trainerPrizeService.grantPrize(defender, challenger, league!!)
+            }
         } else {
             // Non League matches don't alter elo
             league?.let {
