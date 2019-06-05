@@ -86,8 +86,8 @@ class BattleService {
                     else -> BattleResult.DRAW
                 }
 
-                val defenderRating = trainerRatingService.findByTrainerTier(defender, it.tier)!!
-                val challengerRating = trainerRatingService.findByTrainerTier(challenger, it.tier)!!
+                val defenderRating = trainerRatingService.findByTrainerTier(defender.id!!, it.tier)!!
+                val challengerRating = trainerRatingService.findByTrainerTier(challenger.id!!, it.tier)!!
 
                 val (defenderEloChange, challengerEloChange) = eloCalculationService.calculateBattle(defenderRating, challengerRating, battleResult, it)
 
