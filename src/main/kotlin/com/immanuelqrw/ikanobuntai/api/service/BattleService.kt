@@ -44,6 +44,7 @@ class BattleService {
     @Autowired
     private lateinit var trainerPrizeService: TrainerPrizeService
 
+    // ! Add limiter on who's challenger is valid for Prizes in a BattleScheduler
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)
         val challenger = trainerService.findByName(pokemonBattle.challenger)
@@ -71,11 +72,11 @@ class BattleService {
         // No Elo change during title matches
         if (battle.type == BattleType.TITLE) {
             if (challenger == winner) {
-                trainerTitleService.transferTitle(defender, challenger, pokemonBattle.defendingTierTitle!!, pokemonBattle.foughtOn)
+                trainerTitleService.transferTitle(challenger, pokemonBattle.defendingTierTitle!!.id!!, pokemonBattle.foughtOn)
             }
         } else if (battle.type.hasPrize) {
             if (challenger == winner) {
-                trainerPrizeService.grantPrize(defender, challenger, league!!)
+                trainerPrizeService.grantPrize(defender.id!!, challenger, league!!)
             }
         } else {
             // Non League matches don't alter elo

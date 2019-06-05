@@ -1,5 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
+import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPrize
@@ -16,8 +17,8 @@ class TrainerPrizeService {
     @Autowired
     private lateinit var trainerTitleService: TrainerTitleService
 
-    fun grantPrize(defender: Trainer, challenger: Trainer, league: League) {
-        val trainerTitle = trainerTitleService.findByTrainerId(defender.id!!)
+    fun grantPrize(defenderId: UUID, challenger: Trainer, league: League) {
+        val trainerTitle = trainerTitleService.findByTrainerId(defenderId)
         val prize = trainerTitle!!.tierTitle.prize
 
         val trainerPrize = TrainerPrize(

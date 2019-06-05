@@ -1,7 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
-import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerTitle
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,8 +27,8 @@ class TrainerTitleService {
         return trainerTitleService.findAll(UNIQUE_PAGE_REQUEST, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
     }
 
-    fun transferTitle(defender: Trainer, challenger: Trainer, tierTitle: TierTitle, foughtOn: LocalDateTime) {
-        val defenderTitle: TrainerTitle = findTitleByTierTitleId(tierTitle.id!!)!!
+    fun transferTitle(challenger: Trainer, tierTitleId: UUID, foughtOn: LocalDateTime) {
+        val defenderTitle: TrainerTitle = findTitleByTierTitleId(tierTitleId)!!
 
         val lostDefenderTitle = defenderTitle.copy(lostOn = foughtOn)
         val wonChallengerTitle = defenderTitle.copy(trainer = challenger, wonOn = foughtOn)
