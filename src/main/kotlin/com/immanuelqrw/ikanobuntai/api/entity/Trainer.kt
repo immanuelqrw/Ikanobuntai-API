@@ -19,9 +19,6 @@ data class Trainer(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "`trainerUserId`", referencedColumnName = "`id`")
-    val trainerUser: TrainerUser,
-
-    @Enumerated
-    val rank: Rank
+    val trainerUser: TrainerUser
 
 ) : BaseUniqueEntity()

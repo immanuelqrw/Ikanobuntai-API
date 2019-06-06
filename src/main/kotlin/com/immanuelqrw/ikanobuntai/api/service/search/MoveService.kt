@@ -1,4 +1,4 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.search
 
 import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.Move

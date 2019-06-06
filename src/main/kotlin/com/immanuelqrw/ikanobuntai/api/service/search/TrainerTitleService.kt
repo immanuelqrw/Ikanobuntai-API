@@ -1,4 +1,4 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.search
 
 import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
@@ -18,7 +18,7 @@ class TrainerTitleService {
     private lateinit var trainerTitleService: UnitTrainerTitleService
 
     fun findByTrainerId(trainerId: UUID): TrainerTitle? {
-        val page = PageRequest.of(1, 1, Sort.by("rank"))
+        val page = PageRequest.of(0, 1, Sort.by("rank"))
 
         return trainerTitleService.findAll(page, "trainerId:$trainerId").content.firstOrNull()
     }
@@ -30,11 +30,11 @@ class TrainerTitleService {
     fun transferTitle(challenger: Trainer, tierTitleId: UUID, foughtOn: LocalDateTime) {
         val defenderTitle: TrainerTitle = findTitleByTierTitleId(tierTitleId)!!
 
-        val lostDefenderTitle = defenderTitle.copy(lostOn = foughtOn)
         val wonChallengerTitle = defenderTitle.copy(trainer = challenger, wonOn = foughtOn)
         wonChallengerTitle.id = null
 
-        trainerTitleService.replace(defenderTitle.id!!, lostDefenderTitle)
+        val lostDefenderChange: Map<String, LocalDateTime> = mapOf("foughtOn" to foughtOn)
+        trainerTitleService.modify(defenderTitle.id!!, lostDefenderChange)
         trainerTitleService.create(wonChallengerTitle)
     }
 

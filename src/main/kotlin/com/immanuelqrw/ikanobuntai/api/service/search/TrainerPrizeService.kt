@@ -1,4 +1,4 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.search
 
 import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.entity.League

@@ -154,14 +154,14 @@ CREATE TABLE "TrainerUser" (
 CREATE TABLE "Trainer" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" VARCHAR(64) NOT NULL UNIQUE,
-  "trainerUserId" UUID NOT NULL REFERENCES "TrainerUser" ("id"),
-  "rank" RANK NOT NULL
+  "trainerUserId" UUID NOT NULL REFERENCES "TrainerUser" ("id")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerRating" (
   "id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "trainerId" UUID NOT NULL REFERENCES "TrainerUser" ("id"),
   "tier" TIER NOT NULL,
+  "rank" RANK NOT NULL,
   "rating" SMALLINT NOT NULL DEFAULT 1000 CHECK ("rating" >= 1000),
   UNIQUE ("trainerId", "tier")
 ) INHERITS ("TableBase");

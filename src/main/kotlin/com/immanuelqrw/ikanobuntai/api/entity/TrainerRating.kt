@@ -21,6 +21,9 @@ data class TrainerRating(
     @Enumerated
     val tier: Tier,
 
+    @Enumerated
+    val rank: Rank,
+
     val elo: Int = 1000
 
 ) : BaseUniqueEntity()

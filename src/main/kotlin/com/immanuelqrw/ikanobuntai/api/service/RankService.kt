@@ -3,6 +3,7 @@ package com.immanuelqrw.ikanobuntai.api.service
 import com.immanuelqrw.ikanobuntai.api.entity.Rank
 import com.immanuelqrw.ikanobuntai.api.entity.Rank.*
 import com.immanuelqrw.ikanobuntai.api.entity.Title.*
+import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -13,8 +14,8 @@ class RankService {
     @Autowired
     private lateinit var trainerTitleService: TrainerTitleService
 
-    fun checkRank(id: UUID, elo: Int, currentRank: Rank): Rank {
-        val titleRank = checkTitle(id)
+    fun checkRank(trainerId: UUID, elo: Int, currentRank: Rank): Rank {
+        val titleRank = checkTitle(trainerId)
         val eloRank = checkElo(elo)
 
         val ranks = listOf(titleRank, eloRank, currentRank)
@@ -38,8 +39,8 @@ class RankService {
         }
     }
 
-    private fun checkTitle(id: UUID): Rank {
-        val trainerTitle = trainerTitleService.findByTrainerId(id)
+    private fun checkTitle(trainerId: UUID): Rank {
+        val trainerTitle = trainerTitleService.findByTrainerId(trainerId)
 
         return when(trainerTitle?.tierTitle?.title) {
             WORLD_NOBLE,

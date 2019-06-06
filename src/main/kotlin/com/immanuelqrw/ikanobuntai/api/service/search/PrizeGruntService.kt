@@ -1,9 +1,9 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.search
 
+import com.immanuelqrw.ikanobuntai.api.ALL_PAGES
 import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.PrizeGrunt
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.service.unit.PrizeGruntService as UnitPrizeGruntService
@@ -19,9 +19,7 @@ class PrizeGruntService {
     }
 
     fun findAllByLeagueTitle(leagueId: UUID, tierTitleId: UUID): List<PrizeGrunt> {
-        // - Move to configurable value
-        val page = PageRequest.of(1, 100)
-        return prizeGruntService.findAll(page, "leagueId:$leagueId;tierTitleId:$tierTitleId").content
+        return prizeGruntService.findAll(ALL_PAGES, "leagueId:$leagueId;tierTitleId:$tierTitleId").content
     }
 
 }
