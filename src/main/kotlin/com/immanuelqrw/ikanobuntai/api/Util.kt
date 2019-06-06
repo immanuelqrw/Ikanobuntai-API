@@ -16,6 +16,5 @@ fun <T : Any> setOfNotNull(element: T?): Set<T> = if (element != null) setOf(ele
 fun <T : Any> setOfNotNull(vararg elements: T?): Set<T> = elements.filterNotNull().toSet()
 
 val UNIQUE_PAGE_REQUEST: Pageable = PageRequest.of(0, 1)
-val ALL_PAGES: Pageable = PageRequest.of(0, 10_000)
 
 const val TITLE_RANK_DIFFERENCE: Int = 1

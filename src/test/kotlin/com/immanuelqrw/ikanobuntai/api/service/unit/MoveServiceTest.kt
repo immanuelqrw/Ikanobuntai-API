@@ -66,8 +66,19 @@ class MoveServiceTest : BaseUniqueServiceTest<Move>() {
     @Mock
     override lateinit var validPage: Page<Move>
 
+    @Mock
+    override lateinit var validEntities: List<Move>
+
     override val validSearch: String = "id:$validId"
     override val invalidSearch: String = "id@$validId"
+
+    @Mock
+    override lateinit var validEntityIds: Iterable<UUID>
+
+    @Mock
+    override lateinit var invalidEntityIds: Iterable<UUID>
+
+    override val validCount: Long = 0
 
     @Mock
     override lateinit var validSearchSpecification: Specification<Move>

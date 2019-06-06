@@ -1,6 +1,5 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.ALL_PAGES
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,11 +16,11 @@ class BattleService {
     private lateinit var battleService: UnitBattleService
 
     fun findAllByType(battleType: BattleType): List<Battle> {
-        return battleService.findAll(ALL_PAGES, "type:$battleType").content
+        return battleService.findAll("type:$battleType")
     }
 
     fun findAllByWinner(winnerId: UUID): List<Battle> {
-        return battleService.findAll(ALL_PAGES, "winnerId:$winnerId").content
+        return battleService.findAll("winnerId:$winnerId")
     }
 
 }

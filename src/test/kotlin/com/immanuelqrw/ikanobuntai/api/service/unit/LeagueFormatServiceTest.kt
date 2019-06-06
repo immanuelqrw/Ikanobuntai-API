@@ -66,8 +66,19 @@ class LeagueFormatServiceTest : BaseUniqueServiceTest<LeagueFormat>() {
     @Mock
     override lateinit var validPage: Page<LeagueFormat>
 
+    @Mock
+    override lateinit var validEntities: List<LeagueFormat>
+
     override val validSearch: String = "id:$validId"
     override val invalidSearch: String = "id@$validId"
+
+    @Mock
+    override lateinit var validEntityIds: Iterable<UUID>
+
+    @Mock
+    override lateinit var invalidEntityIds: Iterable<UUID>
+
+    override val validCount: Long = 0
 
     @Mock
     override lateinit var validSearchSpecification: Specification<LeagueFormat>
