@@ -15,7 +15,7 @@ class TrainerRatingService {
     private lateinit var trainerRatingService: UnitTrainerRatingService
 
     fun findByTrainerTier(trainerId: UUID, tier: Tier): TrainerRating? {
-        return trainerRatingService.findAll(UNIQUE_PAGE_REQUEST, "trainerId:$trainerId;tier:$tier").content.firstOrNull()
+        return trainerRatingService.findAll("trainerId:$trainerId;tier:$tier").firstOrNull()
     }
 
 }

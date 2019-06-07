@@ -13,7 +13,7 @@ class ItemService {
     private lateinit var itemService: UnitItemService
 
     fun findByName(name: String): Item? {
-        return itemService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
+        return itemService.findAll("name:$name").firstOrNull()
     }
 
 }

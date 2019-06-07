@@ -1,9 +1,10 @@
-package com.immanuelqrw.ikanobuntai.api.service.search
+package com.immanuelqrw.ikanobuntai.api.service
 
 import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPrize
+import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerPrizeService as UnitTrainerPrizeService

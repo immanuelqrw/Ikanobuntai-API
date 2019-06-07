@@ -15,8 +15,8 @@ class BattleService {
     @Autowired
     private lateinit var battleService: UnitBattleService
 
-    fun findAllByType(battleType: BattleType): List<Battle> {
-        return battleService.findAll("type:$battleType")
+    fun findAllByType(type: BattleType): List<Battle> {
+        return battleService.findAll("type:$type")
     }
 
     fun findAllByWinner(winnerId: UUID): List<Battle> {

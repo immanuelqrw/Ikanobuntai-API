@@ -13,7 +13,7 @@ class FormatService {
     private lateinit var formatService: UnitFormatService
 
     fun findByName(name: String): Format? {
-        return formatService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
+        return formatService.findAll("name:$name").firstOrNull()
     }
 
 }

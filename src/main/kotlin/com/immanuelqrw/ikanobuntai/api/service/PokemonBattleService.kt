@@ -7,7 +7,6 @@ import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerPrizeService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService

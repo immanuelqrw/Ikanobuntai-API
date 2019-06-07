@@ -13,7 +13,7 @@ class MoveService {
     private lateinit var moveService: UnitMoveService
 
     fun findByName(name: String): Move? {
-        return moveService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
+        return moveService.findAll("name:$name").firstOrNull()
     }
 
 }

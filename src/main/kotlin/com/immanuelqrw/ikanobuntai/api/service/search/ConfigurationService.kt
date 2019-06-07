@@ -1,6 +1,5 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.Move
 import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +13,7 @@ class ConfigurationService {
     private lateinit var moveService: UnitMoveService
 
     fun findByNameTier(name: String, tier: Tier): Move? {
-        return moveService.findAll(UNIQUE_PAGE_REQUEST, "name:$name;tier:${tier.name}").content.firstOrNull()
+        return moveService.findAll("name:$name;tier:${tier.name}").firstOrNull()
     }
 
 }

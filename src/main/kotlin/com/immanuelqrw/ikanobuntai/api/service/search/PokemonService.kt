@@ -13,7 +13,7 @@ class PokemonService {
     private lateinit var pokemonService: UnitPokemonService
 
     fun findByNameForm(name: String, form: String?): Pokemon? {
-        return pokemonService.findAll(UNIQUE_PAGE_REQUEST, "name:$name;form:${form ?: ""}").content.firstOrNull()
+        return pokemonService.findAll("name:$name;form:${form ?: ""}").firstOrNull()
     }
 
 }

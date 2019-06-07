@@ -1,6 +1,5 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
 import com.immanuelqrw.ikanobuntai.api.entity.PrizeGrunt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -14,7 +13,7 @@ class PrizeGruntService {
     private lateinit var prizeGruntService: UnitPrizeGruntService
 
     fun findByLeagueTrainer(leagueId: UUID, trainerId: UUID): PrizeGrunt? {
-        return prizeGruntService.findAll(UNIQUE_PAGE_REQUEST, "leagueId:$leagueId;trainerId:$trainerId").content.firstOrNull()
+        return prizeGruntService.findAll("leagueId:$leagueId;trainerId:$trainerId").firstOrNull()
     }
 
     fun findAllByLeagueTitle(leagueId: UUID, tierTitleId: UUID): List<PrizeGrunt> {

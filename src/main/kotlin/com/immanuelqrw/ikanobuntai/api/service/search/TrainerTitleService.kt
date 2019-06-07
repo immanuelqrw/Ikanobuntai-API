@@ -24,7 +24,7 @@ class TrainerTitleService {
     }
 
     fun findTitleByTierTitleId(tierTitleId: UUID): TrainerTitle? {
-        return trainerTitleService.findAll(UNIQUE_PAGE_REQUEST, "tierTitle:$tierTitleId;lostOn:").content.firstOrNull()
+        return trainerTitleService.findAll("tierTitle:$tierTitleId;lostOn:").firstOrNull()
     }
 
     fun transferTitle(challenger: Trainer, tierTitleId: UUID, foughtOn: LocalDateTime) {

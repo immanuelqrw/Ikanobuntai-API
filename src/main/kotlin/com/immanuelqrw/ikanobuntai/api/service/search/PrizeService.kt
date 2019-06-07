@@ -13,7 +13,7 @@ class PrizeService {
     private lateinit var prizeService: UnitPrizeService
 
     fun findByName(name: String): Prize? {
-        return prizeService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
+        return prizeService.findAll("name:$name").firstOrNull()
     }
 
     // - Add image insert

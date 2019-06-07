@@ -13,11 +13,11 @@ class TrainerUserService {
     private lateinit var trainerUserService: UnitTrainerUserService
 
     fun findByName(name: String): TrainerUser? {
-        return trainerUserService.findAll(UNIQUE_PAGE_REQUEST, "name:$name").content.firstOrNull()
+        return trainerUserService.findAll("name:$name").firstOrNull()
     }
 
     fun findByEmail(email: String): TrainerUser? {
-        return trainerUserService.findAll(UNIQUE_PAGE_REQUEST, "email:$email").content.firstOrNull()
+        return trainerUserService.findAll("email:$email").firstOrNull()
     }
 
 }
