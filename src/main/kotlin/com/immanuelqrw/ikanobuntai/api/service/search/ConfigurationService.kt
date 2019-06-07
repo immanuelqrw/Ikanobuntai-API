@@ -1,19 +1,19 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.entity.Move
-import com.immanuelqrw.ikanobuntai.api.entity.Tier
+import com.immanuelqrw.ikanobuntai.api.entity.Configuration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import com.immanuelqrw.ikanobuntai.api.service.unit.MoveService as UnitMoveService
+import java.util.UUID
+import com.immanuelqrw.ikanobuntai.api.service.unit.ConfigurationService as UnitConfigurationService
 
 @Service
 class ConfigurationService {
 
     @Autowired
-    private lateinit var moveService: UnitMoveService
+    private lateinit var configurationService: UnitConfigurationService
 
-    fun findByNameTier(name: String, tier: Tier): Move? {
-        return moveService.findAll("name:$name;tier:${tier.name}").firstOrNull()
+    fun findByLeagueFormat(leagueFormatId: UUID): Configuration? {
+        return configurationService.findAll("leagueFormatId:$leagueFormatId").firstOrNull()
     }
 
 }

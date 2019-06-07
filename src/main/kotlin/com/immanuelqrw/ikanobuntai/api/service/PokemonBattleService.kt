@@ -111,13 +111,13 @@ class PokemonBattleService {
 
                 val defenderChange: Map<String, Any> = mapOf(
                     "elo" to defenderEloChange,
-                    "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defenderRating.rank)
+                    "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defenderRating.rank, defenderRating.tier)
                 )
                 unitTrainerRatingService.modify(defenderRating.id!!, defenderChange)
 
                 val challengerChange: Map<String, Any> = mapOf(
                     "elo" to challengerEloChange,
-                    "rank" to rankService.checkRank(challenger.id!!, challengerEloChange, challengerRating.rank)
+                    "rank" to rankService.checkRank(challenger.id!!, challengerEloChange, challengerRating.rank, challengerRating.tier)
                 )
                 unitTrainerRatingService.modify(challengerRating.id!!, challengerChange)
             }

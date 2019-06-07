@@ -1,11 +1,9 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.UNIQUE_PAGE_REQUEST
+import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerTitle
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
@@ -17,10 +15,10 @@ class TrainerTitleService {
     @Autowired
     private lateinit var trainerTitleService: UnitTrainerTitleService
 
-    fun findByTrainerId(trainerId: UUID): TrainerTitle? {
-        val page = PageRequest.of(0, 1, Sort.by("rank"))
-
-        return trainerTitleService.findAll(page, "trainerId:$trainerId").content.firstOrNull()
+    fun findByTrainerIdTier(trainerId: UUID, tier: Tier): TrainerTitle? {
+        return trainerTitleService.findAll("trainerId:$trainerId").firstOrNull { trainerTitle ->
+            trainerTitle.tierTitle.tier == tier
+        }
     }
 
     fun findTitleByTierTitleId(tierTitleId: UUID): TrainerTitle? {

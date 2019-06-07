@@ -19,7 +19,7 @@ class TrainerPrizeService {
     private lateinit var trainerTitleService: TrainerTitleService
 
     fun grantPrize(defenderId: UUID, challenger: Trainer, league: League) {
-        val trainerTitle = trainerTitleService.findByTrainerId(defenderId)
+        val trainerTitle = trainerTitleService.findByTrainerIdTier(defenderId, league.tier)
         val prize = trainerTitle!!.tierTitle.prize
 
         val trainerPrize = TrainerPrize(
