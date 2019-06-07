@@ -4,7 +4,7 @@ import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
-import com.immanuelqrw.ikanobuntai.api.entity.BattleType
+import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
@@ -74,9 +74,6 @@ class PokemonBattleService {
             tierTitle = pokemonBattle.defendingTierTitle
         )
 
-        // ! Throw error if battle is not valid
-        battleVerificationService.isValid(battleVerification)
-
         val battle = Battle(
             type = pokemonBattle.type,
             defender = defender,
@@ -86,8 +83,6 @@ class PokemonBattleService {
             foughtOn = pokemonBattle.foughtOn
         )
 
-        val createdBattle: Battle = battleService.create(battle)
-
         val battleResult = when (battle.winner) {
             defender -> BattleResult.WIN
             challenger -> BattleResult.LOSS
@@ -95,16 +90,25 @@ class PokemonBattleService {
         }
 
         // No Elo change during prize/title matches
-        when {
-            battle.type == BattleType.TITLE -> pokemonBattle.run {
-                updateTitle(challenger, battleResult, defendingTierTitle?.id!!, foughtOn)
+        val battleVerificationType = battleVerificationService.type(battleVerification)
+        val createdBattle: Battle = battleService.create(battle)
+
+        when(battleVerificationType) {
+            BattleVerificationType.TITLE -> {
+                pokemonBattle.run {
+                    updateTitle(challenger, battleResult, defendingTierTitle?.id!!, foughtOn)
+                }
             }
-            battle.type.hasPrize -> updatePrize(defender, challenger, battleResult, league!!)
-            else ->
+            BattleVerificationType.PRIZE -> {
+                updatePrize(defender, challenger, battleResult, league!!)
+            }
+            else -> {
                 // Non League matches don't alter elo
                 updateEloRank(league, battleResult, defender.id!!, challenger.id!!)
+            }
         }
 
+        // - Consider returning custom output like changed elo, ranking, title of each trainer
         return createdBattle
     }
 

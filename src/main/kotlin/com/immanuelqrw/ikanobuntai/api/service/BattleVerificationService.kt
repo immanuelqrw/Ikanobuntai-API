@@ -4,6 +4,7 @@ import com.immanuelqrw.ikanobuntai.api.TITLE_RANK_DIFFERENCE
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
+import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
@@ -26,24 +27,27 @@ class BattleVerificationService {
     @Autowired
     private lateinit var trainerRatingService: TrainerRatingService
 
-    fun isValid(battleVerification: BattleVerification): Boolean {
+    fun type(battleVerification: BattleVerification): BattleVerificationType? {
         battleVerification.run {
             if (battleType.hasPrize) {
-                return isPrizeBattleValid(challengerId, leagueId!!, tierTitle!!)
-            } else if (battleType == BattleType.TITLE) {
-                return isTitleBattleValid(defenderId, challengerId, tierTitle!!.tier)
+                validatePrizeBattle(challengerId, leagueId!!, tierTitle!!)
+                return BattleVerificationType.PRIZE
             }
 
             return when (battleType) {
-                BattleType.NON_RANKED, BattleType.WILD -> true
-                else -> false // ! Get stuff
+                BattleType.TITLE -> {
+                    validateTitleBattle(defenderId, challengerId, tierTitle!!.tier)
+                    BattleVerificationType.TITLE
+                }
+                BattleType.WILD -> BattleVerificationType.WILD
+                else -> BattleVerificationType.NON_RANKED
             }
         }
     }
 
-    private fun isPrizeBattleValid(trainerId: UUID, leagueId: UUID, tierTitle: TierTitle): Boolean {
+    private fun validatePrizeBattle(challengerId: UUID, leagueId: UUID, tierTitle: TierTitle) {
         val prizeGrunts = prizeGruntService.findAllByLeagueTitle(leagueId, tierTitle.id!!).toSet()
-        val allBattles: List<Battle> = battleService.findAllByWinner(trainerId)
+        val allBattles: List<Battle> = battleService.findAllByWinner(challengerId)
         val gruntWins = allBattles.filter { wonBattle ->
             val trainers = setOf(wonBattle.defender.id, wonBattle.challenger.id)
 
@@ -52,16 +56,22 @@ class BattleVerificationService {
             }
         }.size
 
-        return gruntWins >= tierTitle.title.gruntRequirement
+        // ! Add custom exception
+        if (gruntWins < tierTitle.title.gruntRequirement) {
+            throw Exception()
+        }
     }
 
-    private fun isTitleBattleValid(defenderId: UUID, challengerId: UUID, tier: Tier): Boolean {
+    private fun validateTitleBattle(defenderId: UUID, challengerId: UUID, tier: Tier) {
         val defenderRating = trainerRatingService.findByTrainerTier(defenderId, tier)!!
         val challengerRating = trainerRatingService.findByTrainerTier(challengerId, tier)!!
 
         val rankDifference = defenderRating.rank.level - challengerRating.rank.level
 
-        return rankDifference <= TITLE_RANK_DIFFERENCE
+        // ! Add custom exception
+        if (rankDifference > TITLE_RANK_DIFFERENCE) {
+            throw Exception()
+        }
     }
 
 }
