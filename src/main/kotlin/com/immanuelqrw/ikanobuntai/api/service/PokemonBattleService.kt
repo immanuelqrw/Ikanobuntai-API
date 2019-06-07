@@ -5,6 +5,7 @@ import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
+import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
@@ -12,6 +13,8 @@ import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.util.UUID
 import com.immanuelqrw.ikanobuntai.api.service.unit.BattleService as UnitBattleService
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerRatingService as UnitTrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerService as UnitTrainerService
@@ -85,45 +88,64 @@ class PokemonBattleService {
 
         val createdBattle: Battle = battleService.create(battle)
 
-        // No Elo change during title matches
-        if (battle.type == BattleType.TITLE) {
-            if (challenger == winner) {
-                // ! Need to refresh Grunts if Title Holder is auto-grunt
-                trainerTitleService.transferTitle(challenger, pokemonBattle.defendingTierTitle!!.id!!, pokemonBattle.foughtOn)
+        val battleResult = when (battle.winner) {
+            defender -> BattleResult.WIN
+            challenger -> BattleResult.LOSS
+            else -> BattleResult.DRAW
+        }
+
+        // No Elo change during prize/title matches
+        when {
+            battle.type == BattleType.TITLE -> pokemonBattle.run {
+                updateTitle(challenger, battleResult, defendingTierTitle?.id!!, foughtOn)
             }
-        } else if (battle.type.hasPrize) {
-            if (challenger == winner) {
-                trainerPrizeService.grantPrize(defender.id!!, challenger, league!!)
-            }
-        } else {
-            // Non League matches don't alter elo
-            league?.let {
-                val battleResult = when(battle.winner) {
-                    defender -> BattleResult.WIN
-                    challenger -> BattleResult.LOSS
-                    else -> BattleResult.DRAW
-                }
-
-                val defenderRating = trainerRatingService.findByTrainerTier(defender.id!!, it.tier)!!
-                val challengerRating = trainerRatingService.findByTrainerTier(challenger.id!!, it.tier)!!
-
-                val (defenderEloChange, challengerEloChange) = eloService.calculateBattle(defenderRating.elo, challengerRating.elo, battleResult, it.kFactor)
-
-                val defenderChange: Map<String, Any> = mapOf(
-                    "elo" to defenderEloChange,
-                    "rank" to rankService.checkRank(defender.id!!, defenderEloChange, defenderRating.rank, defenderRating.tier)
-                )
-                unitTrainerRatingService.modify(defenderRating.id!!, defenderChange)
-
-                val challengerChange: Map<String, Any> = mapOf(
-                    "elo" to challengerEloChange,
-                    "rank" to rankService.checkRank(challenger.id!!, challengerEloChange, challengerRating.rank, challengerRating.tier)
-                )
-                unitTrainerRatingService.modify(challengerRating.id!!, challengerChange)
-            }
+            battle.type.hasPrize -> updatePrize(defender, challenger, battleResult, league!!)
+            else ->
+                // Non League matches don't alter elo
+                updateEloRank(league, battleResult, defender.id!!, challenger.id!!)
         }
 
         return createdBattle
+    }
+
+    private fun hasChallengerWon(battleResult: BattleResult): Boolean {
+        // BattleResult is from Defender perspective
+        return battleResult == BattleResult.LOSS
+    }
+
+    private fun updateTitle(challenger: Trainer, battleResult: BattleResult, defendingTierTitleId: UUID, foughtOn: LocalDateTime) {
+        if (hasChallengerWon(battleResult)) {
+            // ! Need to refresh Grunts if Title Holder is auto-grunt
+            trainerTitleService.transferTitle(challenger, defendingTierTitleId, foughtOn)
+        }
+    }
+
+    private fun updatePrize(defender: Trainer, challenger: Trainer, battleResult: BattleResult, league: League)  {
+        if (hasChallengerWon(battleResult)) {
+            trainerPrizeService.grantPrize(defender.id!!, challenger, league)
+        }
+    }
+
+    private fun updateEloRank(league: League?, battleResult: BattleResult, defenderId: UUID, challengerId: UUID) {
+        league?.run {
+            val defenderRating = trainerRatingService.findByTrainerTier(defenderId, tier)!!
+            val challengerRating = trainerRatingService.findByTrainerTier(challengerId, tier)!!
+
+            val (defenderEloChange, challengerEloChange) = eloService.calculateBattle(defenderRating.elo, challengerRating.elo, battleResult, kFactor)
+
+            val defenderChange: Map<String, Any> = mapOf(
+                "elo" to defenderEloChange,
+                "rank" to rankService.checkRank(defenderId, defenderEloChange, defenderRating.rank, tier)
+            )
+            unitTrainerRatingService.modify(defenderRating.id!!, defenderChange)
+
+            val challengerChange: Map<String, Any> = mapOf(
+                "elo" to challengerEloChange,
+                "rank" to rankService.checkRank(challengerId, challengerEloChange, challengerRating.rank, tier)
+            )
+            unitTrainerRatingService.modify(challengerRating.id!!, challengerChange)
+        }
+
     }
 
 }
