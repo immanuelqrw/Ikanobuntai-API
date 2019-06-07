@@ -27,7 +27,7 @@ class BattleVerificationService {
     @Autowired
     private lateinit var trainerRatingService: TrainerRatingService
 
-    fun type(battleVerification: BattleVerification): BattleVerificationType? {
+    fun acquireType(battleVerification: BattleVerification): BattleVerificationType? {
         battleVerification.run {
             if (battleType.hasPrize) {
                 validatePrizeBattle(challengerId, leagueId!!, tierTitle!!)

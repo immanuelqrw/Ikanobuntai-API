@@ -90,7 +90,7 @@ class PokemonBattleService {
         }
 
         // No Elo change during prize/title matches
-        val battleVerificationType = battleVerificationService.type(battleVerification)
+        val battleVerificationType = battleVerificationService.acquireType(battleVerification)
         val createdBattle: Battle = battleService.create(battle)
 
         when(battleVerificationType) {
