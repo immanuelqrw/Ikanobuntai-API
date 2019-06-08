@@ -30,6 +30,10 @@ data class PokemonGeneration(
 
     val stage: Int = 1,
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    @JoinColumn(name = "`prevolvedPokemonId`", referencedColumnName = "`id`")
+    val prevolvedPokemon: Pokemon?,
+
     @Embedded
     val baseStat: BaseStat,
 

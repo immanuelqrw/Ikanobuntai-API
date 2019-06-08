@@ -1,6 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.rule
 
-import com.immanuelqrw.ikanobuntai.api.dto.PokemonTeam
+import com.immanuelqrw.ikanobuntai.api.dto.BattleTeam
 import com.immanuelqrw.ikanobuntai.api.entity.Type
 
 /**
@@ -10,13 +10,13 @@ object MonotypeFormat : BattleFormat {
 
     override val name: String = "Monotype"
 
-    override fun verify(pokemonTeam: PokemonTeam, limiter: Any?): Boolean {
+    override fun verify(pokemonTeam: BattleTeam, limiter: Any?): Boolean {
         val type = limiter as Type
 
         return verify(pokemonTeam, type)
     }
 
-    private fun verify(pokemonTeam: PokemonTeam, type: Type): Boolean {
+    private fun verify(pokemonTeam: BattleTeam, type: Type): Boolean {
         val (_, trainerPokemon) = pokemonTeam
 
         return trainerPokemon.all {

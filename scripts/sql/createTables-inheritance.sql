@@ -292,7 +292,6 @@ CREATE TABLE "Pokemon" (
   "isLegendary" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMythical" BOOLEAN NOT NULL DEFAULT FALSE,
   "isMega" BOOLEAN NOT NULL DEFAULT FALSE,
-  "prevolvedPokemonId" UUID REFERENCES "Pokemon" ("id"),
   UNIQUE ("name", "form")
 ) INHERITS ("TableBase");
 
@@ -303,6 +302,7 @@ CREATE TABLE "PokemonGeneration" (
   "mainType" POKETYPE NOT NULL,
   "subType" POKETYPE,
   "stage" SMALLINT NOT NULL DEFAULT 1,
+  "prevolvedPokemonId" UUID REFERENCES "Pokemon" ("id"),
   "baseStatTotal" SMALLINT NOT NULL CHECK("baseStatTotal" BETWEEN 0 AND 1530),
   "hpBaseStat" SMALLINT NOT NULL CHECK ("hpBaseStat" BETWEEN 0 AND 255),
   "attackBaseStat" SMALLINT NOT NULL CHECK ("attackBaseStat" BETWEEN 0 AND 255),
@@ -379,3 +379,15 @@ CREATE TABLE "LeaguePokemon" (
   "leagueId" UUID NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
 
+CREATE TABLE "TrainerTeam" (
+  "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
+  "name" VARCHAR(32) NOT NULL UNIQUE,
+  "trainerId" UUID NOT NULL REFERENCES "Trainer" ("id")
+) INHERITS ("TableBase");
+
+CREATE TABLE "PokemonTeam" (
+  "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
+  "trainerTeamId" UUID NOT NULL REFERENCES "TrainerTeam" ("id"),
+  "trainerPokemonId" UUID NOT NULL REFERENCES "TrainerPokemon" ("id"),
+  UNIQUE("trainerTeamId", "trainerPokemonId")
+) INHERITS ("TableBase");

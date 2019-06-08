@@ -1,6 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.rule
 
-import com.immanuelqrw.ikanobuntai.api.dto.PokemonTeam
+import com.immanuelqrw.ikanobuntai.api.dto.BattleTeam
 
 /**
  * Interface to verify teams for battle format
@@ -15,5 +15,5 @@ interface BattleFormat {
     /**
      * Checks to see if teams are valid for format
      */
-    fun verify(pokemonTeam: PokemonTeam, limiter: Any? = null): Boolean
+    fun verify(pokemonTeam: BattleTeam, limiter: Any? = null): Boolean
 }
