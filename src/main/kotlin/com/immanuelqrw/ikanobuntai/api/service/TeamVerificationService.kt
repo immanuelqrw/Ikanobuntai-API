@@ -27,13 +27,9 @@ class TeamVerificationService {
         val defenderPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(defenderTrainerTeam.id!!)
         val challengerPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(challengerTrainerTeam.id!!)
 
-        // ? Should error be thrown instead of boolean in verify?
-        val isNotValid = formats.none { format ->
-            format.rule.verify(defenderPokemonTeam) && format.rule.verify(challengerPokemonTeam)
-        }
-
-        if (isNotValid) {
-            throw Exception()
+        formats.forEach { format ->
+            format.rule.validate(defenderPokemonTeam)
+            format.rule.validate(challengerPokemonTeam)
         }
     }
 

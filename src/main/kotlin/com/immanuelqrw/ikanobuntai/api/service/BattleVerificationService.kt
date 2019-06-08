@@ -7,6 +7,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
+import com.immanuelqrw.ikanobuntai.api.exception.InvalidBattleException
 import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.PrizeGruntService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
@@ -58,7 +59,7 @@ class BattleVerificationService {
 
         // ! Add custom exception
         if (gruntWins < tierTitle.title.gruntRequirement) {
-            throw Exception()
+            throw InvalidBattleException("Too few grunt wins to challenge for ${tierTitle.prize.name}")
         }
     }
 
@@ -70,7 +71,7 @@ class BattleVerificationService {
 
         // ! Add custom exception
         if (rankDifference > TITLE_RANK_DIFFERENCE) {
-            throw Exception()
+            throw InvalidBattleException("Rank too low to challenger for title")
         }
     }
 

@@ -3,7 +3,7 @@ package com.immanuelqrw.ikanobuntai.api.rule
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPokemon
 
 /**
- * Interface to verify teams for battle format
+ * Interface to validate teams for battle format
  */
 interface BattleFormat {
 
@@ -15,5 +15,5 @@ interface BattleFormat {
     /**
      * Checks to see if teams are valid for format
      */
-    fun verify(pokemonTeam: Collection<TrainerPokemon>, limiter: Any? = null): Boolean
+    fun validate(pokemonTeam: Collection<TrainerPokemon>, limiter: Any? = null)
 }
