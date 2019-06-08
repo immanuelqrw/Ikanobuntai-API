@@ -1,6 +1,5 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-// ? Keep as table in case of additions
 enum class Type {
     GRASS,
     FIRE,

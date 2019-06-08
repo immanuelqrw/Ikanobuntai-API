@@ -57,7 +57,6 @@ class BattleVerificationService {
             }
         }.size
 
-        // ! Add custom exception
         if (gruntWins < tierTitle.title.gruntRequirement) {
             throw InvalidBattleException("Too few grunt wins to challenge for ${tierTitle.prize.name}")
         }
@@ -69,7 +68,6 @@ class BattleVerificationService {
 
         val rankDifference = defenderRating.rank.level - challengerRating.rank.level
 
-        // ! Add custom exception
         if (rankDifference > TITLE_RANK_DIFFERENCE) {
             throw InvalidBattleException("Rank too low to challenger for title")
         }
