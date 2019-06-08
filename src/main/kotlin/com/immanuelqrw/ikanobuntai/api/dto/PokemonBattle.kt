@@ -8,7 +8,9 @@ data class PokemonBattle(
     val type: BattleType,
     val defendingTierTitle: TierTitle?,
     val defender: String,
+    val defenderTeam: String,
     val challenger: String,
+    val challengerTeam: String,
     val winner: String?,
     val league: String?,
     val foughtOn: LocalDateTime

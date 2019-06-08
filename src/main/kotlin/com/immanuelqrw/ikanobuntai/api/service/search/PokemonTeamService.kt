@@ -1,6 +1,7 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
-import com.immanuelqrw.ikanobuntai.api.entity.PokemonTeam
+import com.immanuelqrw.ikanobuntai.api.entity.TrainerPokemon
+import com.immanuelqrw.ikanobuntai.api.entity.TrainerTeam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -12,12 +13,16 @@ class PokemonTeamService {
     @Autowired
     private lateinit var pokemonTeamService: UnitPokemonTeamService
 
-    fun findAllByTrainerTeam(trainerTeamId: UUID): List<PokemonTeam> {
-        return pokemonTeamService.findAll("trainerTeamId:$trainerTeamId")
+    fun findAllTrainerPokemonByTrainerTeam(trainerTeamId: UUID): List<TrainerPokemon> {
+        return pokemonTeamService.findAll("trainerTeamId:$trainerTeamId").map { pokemonTeam ->
+            pokemonTeam.trainerPokemon
+        }
     }
 
-    fun findAllByTrainerPokemon(trainerPokemonId: UUID): List<PokemonTeam> {
-        return pokemonTeamService.findAll("trainerPokemonId:$trainerPokemonId")
+    fun findTrainerTeamsByTrainerPokemon(trainerPokemonId: UUID): List<TrainerTeam> {
+        return pokemonTeamService.findAll("trainerPokemonId:$trainerPokemonId").map { pokemonTeam ->
+            pokemonTeam.trainerTeam
+        }
     }
 
 }

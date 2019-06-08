@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
+import com.immanuelqrw.ikanobuntai.api.dto.TeamVerification
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
@@ -52,6 +53,9 @@ class PokemonBattleService {
     @Autowired
     private lateinit var battleVerificationService: BattleVerificationService
 
+    @Autowired
+    private lateinit var teamVerificationService: TeamVerificationService
+
     // ! Add limiter on who's challenger is valid for Prizes in a BattleScheduler
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)!!
@@ -74,6 +78,12 @@ class PokemonBattleService {
             tierTitle = pokemonBattle.defendingTierTitle
         )
 
+        val teamVerification = TeamVerification(
+            defenderTeam = pokemonBattle.defenderTeam,
+            challengerTeam = pokemonBattle.challengerTeam,
+            leagueId = league?.id
+        )
+
         val battle = Battle(
             type = pokemonBattle.type,
             defender = defender,
@@ -91,6 +101,7 @@ class PokemonBattleService {
 
         // No Elo change during prize/title matches
         val battleVerificationType = battleVerificationService.acquireType(battleVerification)
+        teamVerificationService.validateTeams(teamVerification)
         val createdBattle: Battle = battleService.create(battle)
 
         when(battleVerificationType) {
