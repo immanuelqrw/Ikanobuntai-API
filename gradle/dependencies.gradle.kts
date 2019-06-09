@@ -61,7 +61,8 @@ val jUnitPackages: Array<Package> = arrayOf(
     Package("org.junit.jupiter", "junit-jupiter-engine", junitVersion),
 
     Package("io.mockk", "mockk", "1.8.13"),
-    Package("org.amshove.kluent", "kluent", "1.49")
+    Package("org.amshove.kluent", "kluent", "1.49"),
+    Package("org.mockito", "mockito-core", "2.23.0")
 )
 
 val springTestPackages: Array<Package> = arrayOf(

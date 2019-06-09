@@ -1,45 +1,36 @@
-version: '2'
+version: '3.7'
 services:
-  config-server:
-    container_name: config-server
-    build:
-      context: .
-      dockerfile: Dockerfile.server
-    image: config-server:latest
-    expose:
-      - 8888
-    networks:
-      - spring-cloud-network
-    volumes:
-      - spring-cloud-config-repo:/var/lib/spring-cloud/config-repo
-    logging:
-      driver: json-file
-  config-client:
-    container_name: config-client
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-    image: config-client:latest
-    entrypoint: /opt/spring-cloud/bin/config-client-entrypoint.sh
-    environment:
-      SPRING_APPLICATION_JSON: \
-                                 '{"spring": {"cloud":  \
-        {"config": {"uri": "http://config-server:8888"}}}}'
-    expose:
-      - 8080
+  app-service:
+    build: .
+    restart: always
     ports:
       - 8080:8080
-    networks:
-      - spring-cloud-network
-    links:
-      - config-server:config-server
     depends_on:
-      - config-server
-    logging:
-      driver: json-file
-networks:
-  spring-cloud-network:
-    driver: bridge
+      - app-database
+    networks:
+      app-network:
+        aliases:
+          - app-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DATABASE}:5432/rank?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=${DATABASE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
+
+  app-database:
+    image: postgres:11.3-alpine
+    networks:
+      app-network:
+        aliases:
+          - app-database
+    restart: always
+    environment:
+      POSTGRES_USERNAME: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    ports:
+      - 5432
 volumes:
-  spring-cloud-config-repo:
-    external: true
+  db-data:
+networks:
+  app-network:

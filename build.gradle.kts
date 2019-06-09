@@ -108,15 +108,21 @@ val check by tasks.getting {
 
 
 application {
-    mainClassName = "com.immanuelqrw.ikanobuntai.Application"
+    mainClassName = "com.immanuelqrw.ikanobuntai.api.ApplicationKt"
 }
 
-docker {
-    springBootApplication {
-        baseImage.set("openjdk:8-alpine")
-        maintainer.set("Immanuel Washington 'code.immanuelqrw@gmail.com'")
-        ports.set(listOf(9090, 8080))
-        tag.set("awesome-spring-boot:1.115")
-        jvmArgs.set(listOf("-Dspring.profiles.active=production", "-Xmx2048m"))
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = project.name
+    manifest {
+        attributes["Implementation-Version"] = version
+        attributes["Main-Class"] = "com.immanuelqrw.ikanobuntai.api.ApplicationKt"
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks.jar.get() as CopySpec)
+}
+
+tasks {
+    "build" {
+        dependsOn(fatJar)
     }
 }
