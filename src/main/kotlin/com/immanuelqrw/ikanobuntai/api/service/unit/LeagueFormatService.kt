@@ -4,5 +4,5 @@ import com.immanuelqrw.core.api.service.BaseUniqueService
 import com.immanuelqrw.ikanobuntai.api.entity.LeagueFormat
 import org.springframework.stereotype.Service
 
-@Service
+@Service("UnitLeagueFormatService")
 class LeagueFormatService : BaseUniqueService<LeagueFormat>()
