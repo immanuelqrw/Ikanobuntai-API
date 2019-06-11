@@ -1,6 +1,0 @@
-name|description|hasRuleSet
-Monotype|Every Pokemon in this format might have the same type, across all teams|TRUE
-SharedMonotype|All Pokemon on a team must share at least one type|TRUE
-LevelLimit|Pokemon over declared level not allowed|TRUE
-BannedPokemon|Some Pokemon are banned|FALSE
-BannedItem|Some items are banned|FALSE
