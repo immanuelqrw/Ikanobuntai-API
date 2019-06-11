@@ -1,25 +1,9 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-import com.immanuelqrw.core.entity.BaseUniqueEntity
-import com.immanuelqrw.ikanobuntai.api.rule.BattleFormat
-import com.immanuelqrw.ikanobuntai.api.rule.FormatMapper
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Table
-
-@Entity
-@Table(name = "`Format`")
-data class Format(
-
-    @Column(unique = true)
-    val name: String,
-
-    val description: String,
-
-    val hasRuleset: Boolean = false
-
-) : BaseUniqueEntity() {
-    val rule: BattleFormat by lazy {
-        FormatMapper.map(name)
-    }
+enum class Format(description: String) {
+    BANNED_ITEM("Some items are banned"),
+    BANNED_POKEMON("Some Pokemon are banned"),
+    LEVEL_LIMIT("Pokemon over declared level not allowed"),
+    MONOTYPE("Every Pokemon in this format might have the same type, across all teams"),
+    SHARED_MONOTYPE("All Pokemon on a team must share at least one type")
 }

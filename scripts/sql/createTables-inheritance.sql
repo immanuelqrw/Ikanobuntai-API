@@ -101,12 +101,13 @@ CREATE TABLE "PrizeGrunt" (
 ) INHERITS ("TableBase");
 
 
-CREATE TABLE "Format" (
-  "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
-  "name" VARCHAR(64) NOT NULL UNIQUE,
-  "description" VARCHAR(256) NOT NULL,
-  "hasRuleset" BOOLEAN NOT NULL DEFAULT FALSE
-) INHERITS ("TableBase");
+CREATE TYPE FORMAT AS ENUM(
+  'BANNED_ITEM',
+  'BANNED_POKEMON',
+  'LEVEL_LIMIT',
+  'MONOTYPE',
+  'SHARED_MONOTYPE'
+);
 
 CREATE TYPE LEAGUE_TYPE AS ENUM(
   'WILD',
@@ -131,8 +132,8 @@ CREATE TABLE "League" (
 CREATE TABLE "LeagueFormat" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
-  "formatId" UUID NOT NULL REFERENCES "Format" ("id"),
-  UNIQUE("leagueId", "formatId")
+  "format" FORMAT NOT NULL,
+  UNIQUE("leagueId", "format")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "Configuration" (

@@ -19,8 +19,8 @@ class LeagueFormatService {
         }
     }
 
-    fun findAllLeaguesByFormat(leagueId: UUID): List<League> {
-        return leagueFormatService.findAll("leagueId:$leagueId").map { leagueFormat ->
+    fun findAllLeaguesByFormat(format: Format): List<League> {
+        return leagueFormatService.findAll("format:${format.name}").map { leagueFormat ->
             leagueFormat.league
         }
     }

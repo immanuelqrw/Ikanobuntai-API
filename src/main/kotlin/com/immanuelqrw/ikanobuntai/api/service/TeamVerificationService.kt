@@ -1,6 +1,7 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.dto.TeamVerification
+import com.immanuelqrw.ikanobuntai.api.rule.FormatRule
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueFormatService
 import com.immanuelqrw.ikanobuntai.api.service.search.PokemonTeamService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTeamService
@@ -28,8 +29,8 @@ class TeamVerificationService {
         val challengerPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(challengerTrainerTeam.id!!)
 
         formats.forEach { format ->
-            format.rule.validate(defenderPokemonTeam)
-            format.rule.validate(challengerPokemonTeam)
+            FormatRule.validate(format, defenderPokemonTeam)
+            FormatRule.validate(format, challengerPokemonTeam)
         }
     }
 

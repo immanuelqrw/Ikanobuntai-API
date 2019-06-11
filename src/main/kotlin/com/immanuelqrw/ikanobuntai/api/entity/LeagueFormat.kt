@@ -10,15 +10,13 @@ import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "`LeagueFormat`", uniqueConstraints = [UniqueConstraint(columnNames = ["`leagueId`", "`formatId`"])])
+@Table(name = "`LeagueFormat`", uniqueConstraints = [UniqueConstraint(columnNames = ["`leagueId`", "`format`"])])
 data class LeagueFormat(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "`leagueId`", referencedColumnName = "`id`")
     val league: League,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`formatId`", referencedColumnName = "`id`")
     val format: Format
 
 ) : BaseUniqueEntity()

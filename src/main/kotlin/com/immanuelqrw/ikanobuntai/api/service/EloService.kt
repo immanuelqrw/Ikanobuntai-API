@@ -5,6 +5,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.League
 import org.springframework.stereotype.Service
 import kotlin.math.pow
 
+// - Consider converting to object
 @Service
 class EloService {
 
