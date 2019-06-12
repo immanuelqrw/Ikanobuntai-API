@@ -1,13 +1,13 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.battle
 
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPrize
+import com.immanuelqrw.ikanobuntai.api.service.search.TrainerPrizeService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerPrizeService
 
 @Service
 class BattlePrizeService {

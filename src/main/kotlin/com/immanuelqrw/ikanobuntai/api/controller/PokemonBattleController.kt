@@ -2,7 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.controller
 
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.entity.Battle
-import com.immanuelqrw.ikanobuntai.api.service.PokemonBattleService
+import com.immanuelqrw.ikanobuntai.api.service.battle.PokemonBattleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping

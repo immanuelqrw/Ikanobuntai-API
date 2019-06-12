@@ -1,4 +1,4 @@
-package com.immanuelqrw.ikanobuntai.api.service
+package com.immanuelqrw.ikanobuntai.api.service.battle
 
 import com.immanuelqrw.ikanobuntai.api.TITLE_RANK_DIFFERENCE
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
