@@ -14,7 +14,6 @@ import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
-import com.immanuelqrw.ikanobuntai.api.service.unit.BattleService as UnitBattleService
 
 @Service
 class BattleVerificationService {

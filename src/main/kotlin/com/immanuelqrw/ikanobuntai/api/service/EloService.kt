@@ -1,7 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.service
 
 import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
-import com.immanuelqrw.ikanobuntai.api.entity.League
 import org.springframework.stereotype.Service
 import kotlin.math.pow
 

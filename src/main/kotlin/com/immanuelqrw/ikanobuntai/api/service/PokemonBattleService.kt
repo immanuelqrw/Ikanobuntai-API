@@ -8,6 +8,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
+import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
@@ -16,15 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
-import com.immanuelqrw.ikanobuntai.api.service.unit.BattleService as UnitBattleService
-import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerRatingService as UnitTrainerRatingService
-import com.immanuelqrw.ikanobuntai.api.service.unit.TrainerService as UnitTrainerService
 
 @Service
 class PokemonBattleService {
 
     @Autowired
-    private lateinit var battleService: UnitBattleService
+    private lateinit var battleService: BattleService
 
     @Autowired
     private lateinit var trainerService: TrainerService
@@ -36,9 +34,6 @@ class PokemonBattleService {
     private lateinit var trainerRatingService: TrainerRatingService
 
     @Autowired
-    private lateinit var unitTrainerRatingService: UnitTrainerRatingService
-
-    @Autowired
     private lateinit var rankService: RankService
 
     @Autowired
@@ -48,7 +43,7 @@ class PokemonBattleService {
     private lateinit var leagueService: LeagueService
 
     @Autowired
-    private lateinit var trainerPrizeService: TrainerPrizeService
+    private lateinit var battlePrizeService: BattlePrizeService
 
     @Autowired
     private lateinit var battleVerificationService: BattleVerificationService
@@ -137,7 +132,7 @@ class PokemonBattleService {
 
     private fun updatePrize(defender: Trainer, challenger: Trainer, battleResult: BattleResult, league: League)  {
         if (hasChallengerWon(battleResult)) {
-            trainerPrizeService.grantPrize(defender.id!!, challenger, league)
+            battlePrizeService.grantPrize(defender.id!!, challenger, league)
         }
     }
 
@@ -152,13 +147,13 @@ class PokemonBattleService {
                 "elo" to defenderEloChange,
                 "rank" to rankService.checkRank(defenderId, defenderEloChange, defenderRating.rank, tier)
             )
-            unitTrainerRatingService.modify(defenderRating.id!!, defenderChange)
+            trainerRatingService.modify(defenderRating.id!!, defenderChange)
 
             val challengerChange: Map<String, Any> = mapOf(
                 "elo" to challengerEloChange,
                 "rank" to rankService.checkRank(challengerId, challengerEloChange, challengerRating.rank, tier)
             )
-            unitTrainerRatingService.modify(challengerRating.id!!, challengerChange)
+            trainerRatingService.modify(challengerRating.id!!, challengerChange)
         }
 
     }

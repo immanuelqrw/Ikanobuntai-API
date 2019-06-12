@@ -1,20 +1,15 @@
 package com.immanuelqrw.ikanobuntai.api.service.search
 
+import com.immanuelqrw.core.api.service.BaseUniqueService
 import com.immanuelqrw.ikanobuntai.api.entity.Prize
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import com.immanuelqrw.ikanobuntai.api.service.unit.PrizeService as UnitPrizeService
 
 @Service
-class PrizeService {
-
-    @Autowired
-    private lateinit var prizeService: UnitPrizeService
+class PrizeService : BaseUniqueService<Prize>() {
 
     fun findByName(name: String): Prize? {
-        return prizeService.findAll("name:$name").firstOrNull()
+        return findAll("name:$name").firstOrNull()
     }
 
     // - Add image insert
-
 }
