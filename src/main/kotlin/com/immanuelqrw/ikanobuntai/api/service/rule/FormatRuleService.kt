@@ -1,4 +1,4 @@
-package com.immanuelqrw.ikanobuntai.api.rule
+package com.immanuelqrw.ikanobuntai.api.service.rule
 
 import com.immanuelqrw.ikanobuntai.api.entity.Format
 import com.immanuelqrw.ikanobuntai.api.entity.Format.*
@@ -7,8 +7,10 @@ import com.immanuelqrw.ikanobuntai.api.entity.PokemonGeneration
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPokemon
 import com.immanuelqrw.ikanobuntai.api.entity.Type
 import com.immanuelqrw.ikanobuntai.api.exception.InvalidPokemonException
+import org.springframework.stereotype.Service
 
-object FormatRule {
+@Service
+class FormatRuleService : Rule {
 
     fun validate(format: Format, pokemonTeam: Collection<TrainerPokemon>, limiter: Any? = null) {
         when(format) {
