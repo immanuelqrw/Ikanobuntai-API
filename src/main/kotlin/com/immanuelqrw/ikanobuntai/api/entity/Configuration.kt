@@ -18,6 +18,18 @@ data class Configuration(
 
     val value: String,
 
-    val type: String
+    val type: VarType
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val trueValue: Any?
+        get() {
+            return when(type) {
+                VarType.BOOLEAN -> value.toBoolean()
+                VarType.SCALAR -> value.toInt()
+                VarType.STRING -> value
+                VarType.COLLECTION -> value.split("|")
+            }
+        }
+
+}

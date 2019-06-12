@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 class FormatRuleService : Rule {
 
-    fun validate(format: Format, pokemonTeam: Collection<TrainerPokemon>, limiter: Any? = null) {
+    fun validate(format: Format, pokemonTeam: Collection<TrainerPokemon>, limiter: Any?) {
         when(format) {
             BANNED_ITEM -> {
                 val bannedItems = limiter as Collection<Item>

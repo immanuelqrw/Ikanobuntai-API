@@ -10,14 +10,22 @@ import java.util.UUID
 @Service
 class LeagueFormatService : BaseUniqueService<LeagueFormat>() {
 
+    fun findAllLeagueFormatsByLeague(leagueId: UUID): List<LeagueFormat> {
+        return findAll("leagueId:$leagueId")
+    }
+
+    fun findAllLeagueFormatsByFormat(format: Format): List<LeagueFormat> {
+        return findAll("format:${format.name}")
+    }
+
     fun findAllFormatsByLeague(leagueId: UUID): List<Format> {
-        return findAll("leagueId:$leagueId").map { leagueFormat ->
+        return findAllLeagueFormatsByLeague(leagueId).map { leagueFormat ->
             leagueFormat.format
         }
     }
 
     fun findAllLeaguesByFormat(format: Format): List<League> {
-        return findAll("format:${format.name}").map { leagueFormat ->
+        return findAllLeagueFormatsByFormat(format).map { leagueFormat ->
             leagueFormat.league
         }
     }

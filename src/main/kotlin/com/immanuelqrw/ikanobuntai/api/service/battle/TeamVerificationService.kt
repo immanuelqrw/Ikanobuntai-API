@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.service.battle
 
 import com.immanuelqrw.ikanobuntai.api.dto.TeamVerification
 import com.immanuelqrw.ikanobuntai.api.service.rule.FormatRuleService
+import com.immanuelqrw.ikanobuntai.api.service.search.ConfigurationService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueFormatService
 import com.immanuelqrw.ikanobuntai.api.service.search.PokemonTeamService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTeamService
@@ -23,17 +24,25 @@ class TeamVerificationService {
     @Autowired
     private lateinit var formatRuleService: FormatRuleService
 
+    @Autowired
+    private lateinit var configurationService: ConfigurationService
+
     fun validateTeams(teamVerification: TeamVerification) {
         val defenderTrainerTeam = trainerTeamService.findByName(teamVerification.defenderTeam)!!
         val challengerTrainerTeam = trainerTeamService.findByName(teamVerification.challengerTeam)!!
-        val formats = leagueFormatService.findAllFormatsByLeague(teamVerification.leagueId!!)
+        val leagueFormats = leagueFormatService.findAllLeagueFormatsByLeague(teamVerification.leagueId!!)
 
         val defenderPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(defenderTrainerTeam.id!!)
         val challengerPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(challengerTrainerTeam.id!!)
 
-        formats.forEach { format ->
-            formatRuleService.validate(format, defenderPokemonTeam)
-            formatRuleService.validate(format, challengerPokemonTeam)
+        leagueFormats.forEach { leagueFormat ->
+            val format = leagueFormat.format
+            val formatConfiguration = configurationService.findByLeagueFormat(leagueFormat.id!!)
+
+            val formatLimiter: Any? = formatConfiguration?.trueValue
+
+            formatRuleService.validate(format, defenderPokemonTeam, formatLimiter)
+            formatRuleService.validate(format, challengerPokemonTeam, formatLimiter)
         }
     }
 

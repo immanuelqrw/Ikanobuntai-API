@@ -136,11 +136,18 @@ CREATE TABLE "LeagueFormat" (
   UNIQUE("leagueId", "format")
 ) INHERITS ("TableBase");
 
+CREATE TYPE VAR_TYPE AS ENUM(
+  'BOOLEAN',
+  'SCALAR',
+  'STRING',
+  'COLLECTION'
+);
+
 CREATE TABLE "Configuration" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "leagueFormatId" UUID NOT NULL REFERENCES "LeagueFormat" ("id") UNIQUE,
   "value" VARCHAR(64) NOT NULL,
-  "type" VARCHAR(32) NOT NULL
+  "type" VAR_TYPE NOT NULL
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerUser" (
