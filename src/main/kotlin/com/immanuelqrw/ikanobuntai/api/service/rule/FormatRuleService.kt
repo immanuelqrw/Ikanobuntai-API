@@ -37,6 +37,21 @@ class FormatRuleService : Rule {
             SHARED_MONOTYPE -> {
                 validateSharedType(pokemonTeam)
             }
+            LEVEL_RANGE -> {
+                val range: List<String> = (limiter as String).split(":")
+                val minLevel = range.first().toInt()
+                val maxLevel = range.last().toInt()
+                validateLevelRange(pokemonTeam, minLevel, maxLevel)
+            }
+            NO_MEGA -> {
+                validateNoMega(pokemonTeam)
+            }
+            NO_LEGENDARY -> {
+                validateNoLegendary(pokemonTeam)
+            }
+            NO_MYTHICAL -> {
+                validateNoMythical(pokemonTeam)
+            }
         }
     }
 
@@ -112,6 +127,62 @@ class FormatRuleService : Rule {
             }
 
             throw InvalidPokemonException("Pokémon with type(s) [$invalidMessage] are not allowed in this league.")
+        }
+    }
+
+    private fun validateLevelRange(pokemonTeam: Collection<TrainerPokemon>, minLevel: Int, maxLevel: Int) {
+        val invalidPokemon = pokemonTeam.filter { trainerPokemon ->
+            trainerPokemon.level !in minLevel..maxLevel
+        }
+
+        if (invalidPokemon.isNotEmpty()) {
+            val invalidMessage = invalidPokemon.joinToString { pokemon ->
+                "${pokemon.pokemonGeneration.pokemon.name}:${pokemon.level}"
+            }
+
+            throw InvalidPokemonException("Pokémon with levels [$invalidMessage] are not allowed in this league.")
+        }
+    }
+
+    private fun validateNoMega(pokemonTeam: Collection<TrainerPokemon>) {
+        val invalidPokemon = pokemonTeam.filter { trainerPokemon ->
+            trainerPokemon.pokemonGeneration.pokemon.isMega
+        }
+
+        if (invalidPokemon.isNotEmpty()) {
+            val invalidMessage = invalidPokemon.joinToString { pokemon ->
+                pokemon.pokemonGeneration.pokemon.form!!
+            }
+
+            throw InvalidPokemonException("Mega Pokémon [$invalidMessage] are not allowed in this league.")
+        }
+    }
+
+    private fun validateNoLegendary(pokemonTeam: Collection<TrainerPokemon>) {
+        val invalidPokemon = pokemonTeam.filter { trainerPokemon ->
+            trainerPokemon.pokemonGeneration.pokemon.isLegendary
+        }
+
+        if (invalidPokemon.isNotEmpty()) {
+            val invalidMessage = invalidPokemon.joinToString { pokemon ->
+                pokemon.pokemonGeneration.pokemon.name
+            }
+
+            throw InvalidPokemonException("Legendary Pokémon [$invalidMessage] are not allowed in this league.")
+        }
+    }
+
+    private fun validateNoMythical(pokemonTeam: Collection<TrainerPokemon>) {
+        val invalidPokemon = pokemonTeam.filter { trainerPokemon ->
+            trainerPokemon.pokemonGeneration.pokemon.isMythical
+        }
+
+        if (invalidPokemon.isNotEmpty()) {
+            val invalidMessage = invalidPokemon.joinToString { pokemon ->
+                pokemon.pokemonGeneration.pokemon.name
+            }
+
+            throw InvalidPokemonException("Mythical Pokémon [$invalidMessage] are not allowed in this league.")
         }
     }
 }
