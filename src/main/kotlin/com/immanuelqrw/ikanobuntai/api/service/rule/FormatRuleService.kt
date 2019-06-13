@@ -6,6 +6,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.Item
 import com.immanuelqrw.ikanobuntai.api.entity.PokemonGeneration
 import com.immanuelqrw.ikanobuntai.api.entity.TrainerPokemon
 import com.immanuelqrw.ikanobuntai.api.entity.Type
+import com.immanuelqrw.ikanobuntai.api.exception.InvalidBattleException
 import com.immanuelqrw.ikanobuntai.api.exception.InvalidPokemonException
 import org.springframework.stereotype.Service
 
@@ -51,6 +52,11 @@ class FormatRuleService : Rule {
             }
             NO_MYTHICAL -> {
                 validateNoMythical(pokemonTeam)
+            }
+            TEAM_LEVEL_LIMIT -> {
+                val totalLevelLimit = limiter as Int
+
+                validateTeamLevel(pokemonTeam, totalLevelLimit)
             }
         }
     }
@@ -183,6 +189,16 @@ class FormatRuleService : Rule {
             }
 
             throw InvalidPokemonException("Mythical Pokémon [$invalidMessage] are not allowed in this league.")
+        }
+    }
+
+    private fun validateTeamLevel(pokemonTeam: Collection<TrainerPokemon>, teamLevelLimit: Int) {
+        val teamLevel =  pokemonTeam.sumBy { trainerPokemon ->
+            trainerPokemon.level
+        }
+
+        if (teamLevel > teamLevelLimit) {
+            throw InvalidBattleException("Cumulative team level of Pokémon [$teamLevel] > League limit [$teamLevelLimit] are not allowed in this league.")
         }
     }
 }

@@ -9,5 +9,6 @@ enum class Format(description: String) {
     LEVEL_RANGE("Minimum and Maximum levels allowed"),
     NO_MEGA("No Megas"),
     NO_LEGENDARY("No Legendaries"),
-    NO_MYTHICAL("No Mythicals")
+    NO_MYTHICAL("No Mythicals"),
+    TEAM_LEVEL_LIMIT("Teams with total level over declared not allowed")
 }
