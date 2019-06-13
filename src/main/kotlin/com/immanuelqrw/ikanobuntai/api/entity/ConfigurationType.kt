@@ -1,6 +1,6 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
-enum class VarType {
+enum class ConfigurationType {
     BOOLEAN,
     SCALAR,
     STRING,
