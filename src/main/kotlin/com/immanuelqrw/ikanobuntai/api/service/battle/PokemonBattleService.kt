@@ -10,6 +10,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
+import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
@@ -51,7 +52,9 @@ class PokemonBattleService {
     @Autowired
     private lateinit var teamVerificationService: TeamVerificationService
 
-    // ! Add limiter on who's challenger is valid for Prizes in a BattleScheduler
+    @Autowired
+    private lateinit var scheduledBattleService: ScheduledBattleService
+
     fun create(pokemonBattle: PokemonBattle): Battle {
         val defender = trainerService.findByName(pokemonBattle.defender)!!
         val challenger = trainerService.findByName(pokemonBattle.challenger)!!
@@ -68,7 +71,7 @@ class PokemonBattleService {
         val battleVerification = BattleVerification(
             defenderId = defender.id!!,
             challengerId = challenger.id!!,
-            battleType= pokemonBattle.type,
+            battleType = pokemonBattle.type,
             leagueId = league?.id,
             tierTitle = pokemonBattle.defendingTierTitle
         )
@@ -115,6 +118,12 @@ class PokemonBattleService {
         }
 
         // - Consider returning custom output like changed elo, ranking, title of each trainer
+        // ! Consider if validate that actual battle has same parameters as scheduled
+        pokemonBattle.scheduledBattleId?.run {
+            val scheduledBattle = scheduledBattleService.find(this).copy(hasConcluded = true)
+            scheduledBattleService.replace(this, scheduledBattle)
+        }
+
         return createdBattle
     }
 

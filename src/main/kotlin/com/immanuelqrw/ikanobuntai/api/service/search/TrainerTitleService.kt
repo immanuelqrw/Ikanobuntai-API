@@ -11,7 +11,6 @@ import java.util.UUID
 @Service
 class TrainerTitleService : BaseUniqueService<TrainerTitle>() {
 
-
     fun findByTrainerIdTier(trainerId: UUID, tier: Tier): TrainerTitle? {
         return findAll("trainerId:$trainerId").firstOrNull { trainerTitle ->
             trainerTitle.tierTitle.tier == tier
@@ -28,7 +27,7 @@ class TrainerTitleService : BaseUniqueService<TrainerTitle>() {
         val wonChallengerTitle = defenderTitle.copy(trainer = challenger, wonOn = foughtOn)
         wonChallengerTitle.id = null
 
-        val lostDefenderChange: Map<String, LocalDateTime> = mapOf("foughtOn" to foughtOn)
+        val lostDefenderChange: Map<String, LocalDateTime> = mapOf("toBeFoughtOn" to foughtOn)
         modify(defenderTitle.id!!, lostDefenderChange)
         create(wonChallengerTitle)
     }

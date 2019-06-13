@@ -207,6 +207,17 @@ CREATE TYPE BATTLE_TYPE AS ENUM(
   'WORLD_CHAMPION'
 );
 
+CREATE TABLE "ScheduledBattle" (
+  "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
+  "type" BATTLE_TYPE NOT NULL,
+  "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  "leagueId" UUID REFERENCES "League" ("id"),
+  "toBeFoughtOn" TIMESTAMP NOT NULL ,
+  "hasConcluded" BOOLEAN NOT NULL DEFAULT FALSE
+  CHECK ("defenderId" <> "challengerId")
+) INHERITS ("TableBase");
+
 CREATE TABLE "Battle" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "type" BATTLE_TYPE NOT NULL,
