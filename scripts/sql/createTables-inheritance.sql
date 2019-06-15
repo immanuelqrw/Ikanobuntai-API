@@ -117,6 +117,7 @@ CREATE TYPE FORMAT AS ENUM(
 CREATE TYPE LEAGUE_TYPE AS ENUM(
   'WILD',
   'LEAGUE',
+  'TOURNAMENT',
   'BATTLE_FRONTIER',
   'WORLD_CHAMPIONSHIP'
 );
@@ -196,6 +197,8 @@ CREATE TYPE BATTLE_RESULT AS ENUM (
 CREATE TYPE BATTLE_TYPE AS ENUM(
   'NON_RANKED',
   'WILD',
+  'LEAGUE',
+  'TOURNAMENT',
   'GYM',
   'GYM_LEADER',
   'LEAGUE_FINALIST',
@@ -212,7 +215,7 @@ CREATE TABLE "ScheduledBattle" (
   "type" BATTLE_TYPE NOT NULL,
   "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
-  "leagueId" UUID REFERENCES "League" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
   "toBeFoughtOn" TIMESTAMP NOT NULL ,
   "hasConcluded" BOOLEAN NOT NULL DEFAULT FALSE
   CHECK ("defenderId" <> "challengerId")
@@ -224,7 +227,7 @@ CREATE TABLE "Battle" (
   "defenderId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "challengerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
   "winnerId" UUID REFERENCES "Trainer" ("id"),
-  "leagueId" UUID REFERENCES "League" ("id"),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
   "foughtOn" TIMESTAMP NOT NULL,
   CHECK ("defenderId" <> "challengerId")
 ) INHERITS ("TableBase");
@@ -401,6 +404,13 @@ CREATE TABLE "LeaguePokemon" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "trainerPokemonId" UUID NOT NULL REFERENCES "TrainerPokemon" ("id"),
   "leagueId" UUID NOT NULL REFERENCES "League" ("id")
+) INHERITS ("TableBase");
+
+CREATE TABLE "LeagueTrainer" (
+  "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
+  "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
+  "trainerId" UUID NOT NULL REFERENCES "Trainer" ("id"),
+  UNIQUE ("leagueId", "trainerId")
 ) INHERITS ("TableBase");
 
 CREATE TABLE "TrainerTeam" (

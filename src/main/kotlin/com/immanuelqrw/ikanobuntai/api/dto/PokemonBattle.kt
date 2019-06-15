@@ -13,7 +13,7 @@ data class PokemonBattle(
     val challenger: String,
     val challengerTeam: String,
     val winner: String?,
-    val league: String?,
+    val league: String,
     val foughtOn: LocalDateTime,
     val scheduledBattleId: UUID? = null
 )

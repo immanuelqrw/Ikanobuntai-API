@@ -8,6 +8,6 @@ data class BattleVerification(
     val defenderId: UUID,
     val challengerId: UUID,
     val battleType: BattleType,
-    val leagueId: UUID?,
+    val leagueId: UUID,
     val tierTitle: TierTitle?
 )

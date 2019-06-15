@@ -10,6 +10,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
+import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
@@ -27,6 +28,9 @@ class PokemonBattleService {
 
     @Autowired
     private lateinit var trainerService: TrainerService
+
+    @Autowired
+    private lateinit var leagueTrainerService: LeagueTrainerService
 
     @Autowired
     private lateinit var eloService: EloService
@@ -56,30 +60,32 @@ class PokemonBattleService {
     private lateinit var scheduledBattleService: ScheduledBattleService
 
     fun create(pokemonBattle: PokemonBattle): Battle {
-        val defender = trainerService.findByName(pokemonBattle.defender)!!
-        val challenger = trainerService.findByName(pokemonBattle.challenger)!!
+        val league = leagueService.findByName(pokemonBattle.league)!!
+
+        val defenderId = trainerService.findByName(pokemonBattle.defender)!!.id!!
+        val defender = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, defenderId)!!
+
+        val challengerId = trainerService.findByName(pokemonBattle.challenger)!!.id!!
+        val challenger = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, challengerId)!!
+
         val winner: Trainer? = when(pokemonBattle.winner) {
             pokemonBattle.defender -> defender
             pokemonBattle.challenger -> challenger
             else -> null
         }
 
-        val league = pokemonBattle.league?.let { league ->
-            leagueService.findByName(league)
-        }
-
         val battleVerification = BattleVerification(
             defenderId = defender.id!!,
             challengerId = challenger.id!!,
             battleType = pokemonBattle.type,
-            leagueId = league?.id,
+            leagueId = league.id!!,
             tierTitle = pokemonBattle.defendingTierTitle
         )
 
         val teamVerification = TeamVerification(
             defenderTeam = pokemonBattle.defenderTeam,
             challengerTeam = pokemonBattle.challengerTeam,
-            leagueId = league?.id
+            leagueId = league.id!!
         )
 
         val battle = Battle(
@@ -109,7 +115,7 @@ class PokemonBattleService {
                 }
             }
             BattleVerificationType.PRIZE -> {
-                updatePrize(defender, challenger, battleResult, league!!)
+                updatePrize(defender, challenger, battleResult, league)
             }
             else -> {
                 // Non League matches don't alter elo
@@ -145,8 +151,8 @@ class PokemonBattleService {
         }
     }
 
-    private fun updateEloRank(league: League?, battleResult: BattleResult, defenderId: UUID, challengerId: UUID) {
-        league?.run {
+    private fun updateEloRank(league: League, battleResult: BattleResult, defenderId: UUID, challengerId: UUID) {
+        league.run {
             val defenderRating = trainerRatingService.findByTrainerTier(defenderId, tier)!!
             val challengerRating = trainerRatingService.findByTrainerTier(challengerId, tier)!!
 

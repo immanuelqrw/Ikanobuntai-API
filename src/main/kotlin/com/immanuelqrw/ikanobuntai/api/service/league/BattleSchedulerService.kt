@@ -1,9 +1,11 @@
-package com.immanuelqrw.ikanobuntai.api.service.battle
+package com.immanuelqrw.ikanobuntai.api.service.league
 
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.dto.PlannedBattle
 import com.immanuelqrw.ikanobuntai.api.entity.ScheduledBattle
+import com.immanuelqrw.ikanobuntai.api.service.battle.BattleVerificationService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
+import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,21 +24,26 @@ class BattleSchedulerService {
     private lateinit var leagueService: LeagueService
 
     @Autowired
+    private lateinit var leagueTrainerService: LeagueTrainerService
+
+    @Autowired
     private lateinit var battleVerificationService: BattleVerificationService
 
     fun schedule(plannedBattle: PlannedBattle): ScheduledBattle {
-        val defender = trainerService.findByName(plannedBattle.defender)!!
-        val challenger = trainerService.findByName(plannedBattle.challenger)!!
+        val league = leagueService.findByName(plannedBattle.league)!!
 
-        val league = plannedBattle.league?.let { league ->
-            leagueService.findByName(league)
-        }
+        val defenderId = trainerService.findByName(plannedBattle.defender)!!.id!!
+        val defender = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, defenderId)!!
+
+        val challengerId = trainerService.findByName(plannedBattle.challenger)!!.id!!
+        val challenger = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, challengerId)!!
 
         val battleVerification = BattleVerification(
-            defenderId = defender.id!!,
-            challengerId = challenger.id!!,
+            defenderId = defenderId,
+            challengerId = challengerId,
             battleType = plannedBattle.type,
-            leagueId = league?.id,
+            // ! Create a generic WILD perpetual league and make non-nullable for WILD battles of each tier
+            leagueId = league.id!!,
             tierTitle = plannedBattle.defendingTierTitle
         )
 

@@ -32,7 +32,7 @@ data class Battle(
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "`leagueId`", referencedColumnName = "`id`")
-    val league: League?,
+    val league: League,
 
     @DateTimeFormat
     val foughtOn: LocalDateTime

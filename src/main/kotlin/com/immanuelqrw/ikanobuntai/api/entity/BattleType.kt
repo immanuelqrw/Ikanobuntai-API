@@ -3,6 +3,8 @@ package com.immanuelqrw.ikanobuntai.api.entity
 enum class BattleType(val hasPrize: Boolean = false, val isGrunt: Boolean = false) {
     NON_RANKED,
     WILD,
+    LEAGUE,
+    TOURNAMENT,
     TITLE,
     GYM(false, true),
     GYM_LEADER(true, true),
