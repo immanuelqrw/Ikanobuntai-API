@@ -2,7 +2,7 @@ Smogon Tier
   Updated on a monthly(?) basis
 Create your own League
   Set rules for a specific League
-    StartLevel, EndLevel, IsLegendary, Stage, Type - MainType/SubType, TotalLevel
+    StartLevel, EndLevel, IsLegendary, Stage, Type [MainType/SubType], TotalLevel
   Set participants
     Invitations
   Set start and end dates

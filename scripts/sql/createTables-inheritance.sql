@@ -75,15 +75,12 @@ CREATE TYPE TITLE AS ENUM(
   'WORLD_CHAMPION'
 );
 
--- - Add seed data
 CREATE TABLE "Prize" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "name" VARCHAR(32) NOT NULL UNIQUE,
   "imageUrl" VARCHAR(256) NOT NULL
 ) INHERITS ("TableBase");
 
--- - Add seed data
--- - Consider adding name field for Gym Leaders
 CREATE TABLE "TierTitle" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "tier" TIER NOT NULL,
@@ -134,7 +131,6 @@ CREATE TABLE "League" (
   "prizeMin" SMALLINT NOT NULL
 ) INHERITS ("TableBase");
 
--- - Add seed data
 CREATE TABLE "LeagueFormat" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "leagueId" UUID NOT NULL REFERENCES "League" ("id"),
@@ -310,7 +306,6 @@ CREATE TYPE GENERATION AS ENUM(
     'GALAR'
 );
 
--- - Add smogon tier generation connection -- separate join table with generation
 CREATE TABLE "Pokemon" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "number" SMALLINT NOT NULL,
@@ -399,7 +394,6 @@ CREATE TABLE "TrainerPrize" (
   "leagueId" UUID NOT NULL REFERENCES "League" ("id")
 ) INHERITS ("TableBase");
 
--- - Enforce limitation on amount of registered pokemon for each league
 CREATE TABLE "LeaguePokemon" (
   "id" UUID PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
   "trainerPokemonId" UUID NOT NULL REFERENCES "TrainerPokemon" ("id"),

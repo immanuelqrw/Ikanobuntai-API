@@ -33,3 +33,7 @@
 {CU} Stage
 {CU} Format
 {D} Battle <scheduled>
+
+# Actions
+Enforce limitation on amount of registered pokemon for each league [LeaguePokemon table on insert]
+Add seed data for every table

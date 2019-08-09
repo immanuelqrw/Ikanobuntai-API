@@ -8,7 +8,7 @@ INSERT INTO
   "PokemonGeneration" (
     "pokemonId", "generationId", "mainType", "subType", "stage",
     "baseStatTotal", "hpBaseStat", "attackBaseStat", "defenseBaseStat", "specialAttackBaseStat", "specialDefenseBaseStat", "speedBaseStat",
-    "abilityId", "secondAbilityId, ""hiddenAbilityId",
+    "abilityId", "secondAbilityId, ""hiddenAbilityId"
   )
 VALUES
   ('001', 7, 'GRASS', 'POISON', 318, 45, 49, 49, 65, 65, 45, 0, NULL, NULL, NULL),
