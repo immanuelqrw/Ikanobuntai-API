@@ -6,7 +6,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.TrainerRating
 import com.immanuelqrw.ikanobuntai.api.repository.TrainerRatingRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Service
 class TrainerRatingSeekService : BaseUniqueService<TrainerRating>(TrainerRating::class.java) {
@@ -14,8 +14,9 @@ class TrainerRatingSeekService : BaseUniqueService<TrainerRating>(TrainerRating:
     @Autowired
     private lateinit var trainerRatingRepository: TrainerRatingRepository
 
-    fun findByTrainerTier(trainerId: UUID, tier: Tier): TrainerRating? {
-        return findAll("trainerId:$trainerId;tier:$tier").firstOrNull()
+    fun findByTrainerAndTier(trainerName: String, tier: Tier): TrainerRating {
+        return trainerRatingRepository.findByTrainerNameAndTierAndRemovedOnIsNull(trainerName, tier)
+            ?: throw EntityNotFoundException()
     }
 
 }

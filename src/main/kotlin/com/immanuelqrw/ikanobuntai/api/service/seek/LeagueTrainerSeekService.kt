@@ -7,7 +7,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.repository.LeagueTrainerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Service
 class LeagueTrainerSeekService : BaseUniqueService<LeagueTrainer>(LeagueTrainer::class.java) {
@@ -15,22 +15,21 @@ class LeagueTrainerSeekService : BaseUniqueService<LeagueTrainer>(LeagueTrainer:
     @Autowired
     private lateinit var leagueTrainerRepository: LeagueTrainerRepository
 
-    fun findAllTrainersByLeague(leagueId: UUID): List<Trainer> {
-        return findAll("leagueId:$leagueId").map { leagueTrainer ->
+    fun findAllTrainersByLeague(leagueName: String): List<Trainer> {
+        return leagueTrainerRepository.findAllByLeagueNameAndRemovedOnIsNull(leagueName).map { leagueTrainer ->
             leagueTrainer.trainer
         }
     }
 
-    fun findTrainerByLeagueTrainer(leagueId: UUID, trainerId: UUID): Trainer? {
-        return findAllTrainersByLeague(leagueId).firstOrNull { trainer ->
-            trainer.id == trainerId
+    fun findAllLeaguesByTrainer(trainerName: String): List<League> {
+        return leagueTrainerRepository.findAllByTrainerNameAndRemovedOnIsNull(trainerName).map { leagueTrainer ->
+            leagueTrainer.league
         }
     }
 
-    fun findAllLeaguesByTrainer(trainerId: UUID): List<League> {
-        return findAll("trainerId:$trainerId").map { leagueTrainer ->
-            leagueTrainer.league
-        }
+    fun findTrainerByLeagueAndTrainer(leagueName: String, trainerName: String): Trainer {
+        return leagueTrainerRepository.findByLeagueNameAndTrainerNameAndRemovedOnIsNull(leagueName, trainerName)?.trainer
+            ?: throw EntityNotFoundException()
     }
 
 }

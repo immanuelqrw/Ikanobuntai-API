@@ -5,6 +5,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 import com.immanuelqrw.ikanobuntai.api.repository.TrainerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.EntityNotFoundException
 
 @Service
 class TrainerSeekService : BaseUniqueService<Trainer>(Trainer::class.java) {
@@ -12,8 +13,8 @@ class TrainerSeekService : BaseUniqueService<Trainer>(Trainer::class.java) {
     @Autowired
     private lateinit var trainerRepository: TrainerRepository
 
-    fun findByName(name: String): Trainer? {
-        return findAll("name:$name").firstOrNull()
+    fun findByName(name: String): Trainer {
+        return trainerRepository.findByNameAndRemovedOnIsNull(name) ?: throw EntityNotFoundException()
     }
 
 }

@@ -15,7 +15,7 @@ import javax.persistence.Table
 @Table(name = "TrainerTeam")
 data class TrainerTeam(
 
-    @Column(name = "hasConcluded", unique = true, nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     val name: String,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
