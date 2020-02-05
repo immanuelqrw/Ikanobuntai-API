@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.Item
 /**
  * Repository interface for [Item]
  */
-interface ItemRepository : BaseUniqueRepository<Item>
+interface ItemRepository : BaseUniqueRepository<Item> {
+
+    fun findByNameAndRemovedOnIsNull(name: String): Item?
+
+}

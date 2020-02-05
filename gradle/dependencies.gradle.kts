@@ -24,8 +24,8 @@ data class Package(
 val nucleusPackages: Array<Package> = arrayOf(
     Package("com.immanuelqrw.core", "nucleus-util", nucleusVersion),
     Package("com.immanuelqrw.core", "nucleus-test", nucleusVersion),
-    Package("com.immanuelqrw.core", "nucleus-entity", "0.0.4-pre-alpha"),
-    Package("com.immanuelqrw.core", "nucleus-api", "0.0.8-pre-alpha")
+    Package("com.immanuelqrw.core", "nucleus-entity", "0.0.15-pre-alpha"),
+    Package("com.immanuelqrw.core", "nucleus-api", "0.0.26-pre-alpha")
 )
 
 val nucleusTestPackages: Array<Package> = arrayOf(
@@ -33,7 +33,8 @@ val nucleusTestPackages: Array<Package> = arrayOf(
 
 val jacksonPackages: Array<Package> = arrayOf(
     Package("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion),
-    Package("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
+    Package("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion),
+    Package("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", jacksonVersion)
 )
 
 val springPackages: Array<Package> = arrayOf(

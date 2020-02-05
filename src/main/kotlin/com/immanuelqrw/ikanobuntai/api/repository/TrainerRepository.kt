@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.Trainer
 /**
  * Repository interface for [Trainer]
  */
-interface TrainerRepository : BaseUniqueRepository<Trainer>
+interface TrainerRepository : BaseUniqueRepository<Trainer> {
+
+    fun findByNameAndRemovedOnIsNull(name: String): Trainer?
+
+}

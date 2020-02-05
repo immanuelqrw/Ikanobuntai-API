@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.Pokemon
 /**
  * Repository interface for [Pokemon]
  */
-interface PokemonRepository : BaseUniqueRepository<Pokemon>
+interface PokemonRepository : BaseUniqueRepository<Pokemon> {
+
+    fun findByNameAndFormAndRemovedOnIsNull(name: String, form: String?): Pokemon?
+
+}

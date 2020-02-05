@@ -6,4 +6,10 @@ import com.immanuelqrw.ikanobuntai.api.entity.PokemonTeam
 /**
  * Repository interface for [PokemonTeam]
  */
-interface PokemonTeamRepository : BaseUniqueRepository<PokemonTeam>
+interface PokemonTeamRepository : BaseUniqueRepository<PokemonTeam> {
+
+    fun findAllByTrainerTeamNameAndRemovedOnIsNull(trainerTeamName: String): List<PokemonTeam>
+
+    fun findAllByTrainerPokemonTrainerNameAndRemovedOnIsNull(trainerName: String): List<PokemonTeam>
+
+}

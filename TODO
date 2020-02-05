@@ -37,3 +37,22 @@
 # Actions
 Enforce limitation on amount of registered pokemon for each league [LeaguePokemon table on insert]
 Add seed data for every table
+
+
+Add Dockerfile
+Add docker-compose.yml
+Add smogon tier join connection data
+
+League Table service
+- Get league
+- Get all battles in league
+- Generate data class fo specific fields
+- Trainer, Win, Draw, Loss, Points
+- Add points as configuration
+
+
+Add TournamentType: ROUND_ROBIN, KNOCKOUT, DOUBLE_ELIMINATION -- nullable
+
+Test that it runs
+
+Add spring configuration

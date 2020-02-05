@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.Prize
 /**
  * Repository interface for [Prize]
  */
-interface PrizeRepository : BaseUniqueRepository<Prize>
+interface PrizeRepository : BaseUniqueRepository<Prize> {
+
+    fun findByNameAndRemovedOnIsNull(name: String): Prize?
+
+}

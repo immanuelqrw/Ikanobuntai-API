@@ -4,10 +4,10 @@ import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.dto.PlannedBattle
 import com.immanuelqrw.ikanobuntai.api.entity.ScheduledBattle
 import com.immanuelqrw.ikanobuntai.api.service.battle.BattleVerificationService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
-import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
+import com.immanuelqrw.ikanobuntai.api.service.seek.LeagueSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.LeagueTrainerSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.ScheduledBattleSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -15,35 +15,35 @@ import org.springframework.stereotype.Service
 class BattleSchedulerService {
 
     @Autowired
-    private lateinit var scheduledBattleService: ScheduledBattleService
+    private lateinit var scheduledBattleSeekService: ScheduledBattleSeekService
 
     @Autowired
-    private lateinit var trainerService: TrainerService
+    private lateinit var trainerSeekService: TrainerSeekService
 
     @Autowired
-    private lateinit var leagueService: LeagueService
+    private lateinit var leagueSeekService: LeagueSeekService
 
     @Autowired
-    private lateinit var leagueTrainerService: LeagueTrainerService
+    private lateinit var leagueTrainerSeekService: LeagueTrainerSeekService
 
     @Autowired
     private lateinit var battleVerificationService: BattleVerificationService
 
     fun schedule(plannedBattle: PlannedBattle): ScheduledBattle {
-        val league = leagueService.findByName(plannedBattle.league)!!
+        val league = leagueSeekService.findByName(plannedBattle.league)
 
-        val defenderId = trainerService.findByName(plannedBattle.defender)!!.id!!
-        val defender = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, defenderId)!!
+        val defenderName = trainerSeekService.findByName(plannedBattle.defender).name
+        val defender = leagueTrainerSeekService.findTrainerByLeagueAndTrainer(league.name, defenderName)
 
-        val challengerId = trainerService.findByName(plannedBattle.challenger)!!.id!!
-        val challenger = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, challengerId)!!
+        val challengerName = trainerSeekService.findByName(plannedBattle.challenger).name
+        val challenger = leagueTrainerSeekService.findTrainerByLeagueAndTrainer(league.name, challengerName)
 
         val battleVerification = BattleVerification(
-            defenderId = defenderId,
-            challengerId = challengerId,
+            defender = defenderName,
+            challenger = challengerName,
             battleType = plannedBattle.type,
             // ! Create a generic WILD perpetual league and make non-nullable for WILD battles of each tier
-            leagueId = league.id!!,
+            league = league.name,
             tierTitle = plannedBattle.defendingTierTitle
         )
 
@@ -58,7 +58,7 @@ class BattleSchedulerService {
         // Validate
         battleVerificationService.acquireType(battleVerification)
 
-        return scheduledBattleService.create(scheduledBattle)
+        return scheduledBattleSeekService.create(scheduledBattle)
     }
 
 }

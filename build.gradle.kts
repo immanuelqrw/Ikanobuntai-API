@@ -1,29 +1,50 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "com.immanuelqrw.ikanobuntai"
-version = "0.0.1-pre-alpha"
+val projectGroup = "com.immanuelqrw.ikanobuntai"
+val projectArtifact = "ikanobuntai-api"
+val projectVersion = "0.0.1-pre-alpha"
+
+group = projectGroup
+version = projectVersion
 
 apply(from = "gradle/constants.gradle.kts")
 
 plugins {
     java
-    kotlin("jvm") version "1.3.31"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.31"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.3.31"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.31"
+    kotlin("jvm") version "1.3.61"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.3.61"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.3.61"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.61"
     id("io.spring.dependency-management") version "1.0.6.RELEASE"
     id("org.sonarqube") version "2.6"
     id("org.jetbrains.dokka") version "0.9.17"
     application
     id("com.bmuschko.docker-spring-boot-application") version "4.8.1"
     idea
+    `maven-publish`
 }
+
+val awsAccessKey: String by project
+val awsSecretKey: String by project
 
 repositories {
     mavenCentral()
     jcenter()
-    maven(url = "http://localhost:8081/repository/maven-public/")
+    maven {
+        url = uri("s3://repo.immanuelqrw.com/release")
+        credentials(AwsCredentials::class.java) {
+            accessKey = awsAccessKey
+            secretKey = awsSecretKey
+        }
+    }
+    maven {
+        url = uri("s3://repo.immanuelqrw.com/snapshot")
+        credentials(AwsCredentials::class.java) {
+            accessKey = awsAccessKey
+            secretKey = awsSecretKey
+        }
+    }
 }
 
 
@@ -124,5 +145,35 @@ val fatJar = task("fatJar", type = Jar::class) {
 tasks {
     "build" {
         dependsOn(fatJar)
+    }
+}
+
+
+val sourcesJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    from(sourceSets["main"].allSource)
+}
+
+val repoUsername: String by project
+val repoPassword: String by project
+
+publishing {
+    repositories {
+        maven {
+            url = uri("s3://repo.immanuelqrw.com/release/")
+            credentials(AwsCredentials::class.java) {
+                accessKey = awsAccessKey
+                secretKey = awsSecretKey
+            }
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            groupId = projectGroup
+            artifactId = projectArtifact
+            version = projectVersion
+            from(components["java"])
+            artifact(sourcesJar.get())
+        }
     }
 }

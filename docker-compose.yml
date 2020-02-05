@@ -28,6 +28,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - db-data:/var/lib/postgresql/data/
+      - ./createDatabase.sql:/docker-entrypoint-initdb.d/createDatabase.sql # Alphabetical order -- use leading numbers
     ports:
       - 5432
 volumes:

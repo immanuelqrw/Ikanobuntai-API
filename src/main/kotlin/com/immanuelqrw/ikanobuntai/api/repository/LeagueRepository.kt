@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.League
 /**
  * Repository interface for [League]
  */
-interface LeagueRepository : BaseUniqueRepository<League>
+interface LeagueRepository : BaseUniqueRepository<League> {
+
+    fun findByNameAndRemovedOnIsNull(name: String): League?
+
+}

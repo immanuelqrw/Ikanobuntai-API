@@ -8,7 +8,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 import com.immanuelqrw.ikanobuntai.api.exception.InvalidBattleException
-import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
+import com.immanuelqrw.ikanobuntai.api.service.search.BattleSeekService
 import com.immanuelqrw.ikanobuntai.api.service.search.PrizeGruntService
 import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ import java.util.UUID
 class BattleVerificationService {
 
     @Autowired
-    private lateinit var battleService: BattleService
+    private lateinit var battleService: BattleSeekService
 
     @Autowired
     private lateinit var prizeGruntService: PrizeGruntService

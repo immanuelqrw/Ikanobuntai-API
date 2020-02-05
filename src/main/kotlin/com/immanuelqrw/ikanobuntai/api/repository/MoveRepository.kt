@@ -6,4 +6,8 @@ import com.immanuelqrw.ikanobuntai.api.entity.Move
 /**
  * Repository interface for [Move]
  */
-interface MoveRepository : BaseUniqueRepository<Move>
+interface MoveRepository : BaseUniqueRepository<Move> {
+
+    fun findByNameAndRemovedOnIsNull(name: String): Move?
+
+}

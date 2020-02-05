@@ -1,26 +1,24 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "`TierTitle`")
+@Table(name = "TierTitle")
 data class TierTitle(
 
     @Enumerated
+    @Column(name = "tier", nullable = false)
     val tier: Tier,
 
     @Enumerated
+    @Column(name = "title", nullable = false)
     val title: Title,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`prizeId`", referencedColumnName = "`id`")
+    @JoinColumn(name = "prizeId", referencedColumnName = "id", nullable = false)
     val prize: Prize
 
 ) : BaseUniqueEntity()

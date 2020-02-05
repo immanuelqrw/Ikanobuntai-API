@@ -1,23 +1,23 @@
 package com.immanuelqrw.ikanobuntai.api.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
-import javax.persistence.Table
+import javax.persistence.*
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "`Configuration`")
+@Table(name = "Configuration")
 data class Configuration(
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "`leagueFormatId`", referencedColumnName = "`id`")
+    @JoinColumn(name = "leagueFormatId", referencedColumnName = "id", nullable = false)
     val leagueFormat: LeagueFormat,
 
+    @Column(name = "value", nullable = false)
     val value: String,
 
+    @Enumerated
+    @Column(name = "type", nullable = false)
     val type: ConfigurationType
 
 ) : BaseUniqueEntity() {

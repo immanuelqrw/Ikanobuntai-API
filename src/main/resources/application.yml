@@ -1,4 +1,11 @@
-# TODO Figure out profiles and environment
+logging:
+  level:
+    org.springframework: ERROR
+    com.immanuelqrw.ikanobuntai.api: DEBUG
+
+  pattern:
+    console: %d{yyyy-MM-dd HH:mm:ss} - %msg%n
+    file: %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
 spring:
   datasource:
     jndi-name: java:/comp/env/jdbc/postgres

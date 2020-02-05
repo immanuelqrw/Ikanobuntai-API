@@ -8,7 +8,7 @@ import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
 import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.Trainer
-import com.immanuelqrw.ikanobuntai.api.service.search.BattleService
+import com.immanuelqrw.ikanobuntai.api.service.search.BattleSeekService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
 import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
 import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
@@ -24,7 +24,7 @@ import java.util.UUID
 class PokemonBattleService {
 
     @Autowired
-    private lateinit var battleService: BattleService
+    private lateinit var battleService: BattleSeekService
 
     @Autowired
     private lateinit var trainerService: TrainerService

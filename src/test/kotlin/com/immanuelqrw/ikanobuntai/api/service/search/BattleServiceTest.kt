@@ -25,7 +25,7 @@ class BattleServiceTest : BaseUniqueServiceTest<Battle>() {
     override val classType: Class<Battle> = Battle::class.java
 
     @InjectMocks
-    override lateinit var service: BattleService
+    override lateinit var service: BattleSeekService
 
     @Mock
     override lateinit var repository: BaseUniqueRepository<Battle>
