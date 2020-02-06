@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class TrainerTitle(
 
-    val trainerString: String,
+    val trainerName: String,
 
     val tierName: String,
 

@@ -33,9 +33,9 @@ data class PokemonGeneration(
 
     val mainAbilityName: String,
 
-    val alternateAbilityName: String,
+    val alternateAbilityName: String?,
 
-    val hiddenAbilityName: String,
+    val hiddenAbilityName: String?,
 
     val spriteUri: String
 

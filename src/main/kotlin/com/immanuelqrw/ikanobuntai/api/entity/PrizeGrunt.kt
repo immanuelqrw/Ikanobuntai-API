@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.PrizeGrunt as PrizeGruntOutput
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -27,4 +28,16 @@ data class PrizeGrunt(
     @JoinColumn(name = "leagueId", referencedColumnName = "id", nullable = false)
     val league: League
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: PrizeGruntOutput
+        get() {
+            return PrizeGruntOutput(
+                trainerName = trainer.name,
+                tierName = tierTitle.tier.name,
+                titleName = tierTitle.title.name,
+                leagueName = league.name
+            )
+        }
+
+}

@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.TrainerRating as TrainerRatingOutput
 import javax.persistence.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,4 +25,16 @@ data class TrainerRating(
     @Column(name = "elo", nullable = false)
     val elo: Int = 1000
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TrainerRatingOutput
+        get() {
+            return TrainerRatingOutput(
+                trainerName = trainer.name,
+                tier = tier,
+                rank = rank,
+                elo = elo
+            )
+        }
+
+}

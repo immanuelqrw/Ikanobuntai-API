@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.Pokemon as PokemonOutput
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -30,4 +31,18 @@ data class Pokemon(
     @Column(name = "isMega", nullable = false)
     val isMega: Boolean = false
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: PokemonOutput
+        get() {
+            return PokemonOutput(
+                number = number,
+                name = name,
+                form = form,
+                isLegendary = isLegendary,
+                isMythical = isMythical,
+                isMega = isMega
+            )
+        }
+
+}

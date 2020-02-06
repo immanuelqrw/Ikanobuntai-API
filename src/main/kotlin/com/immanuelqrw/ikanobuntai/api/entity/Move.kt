@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.Move as MoveOutput
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -32,4 +33,18 @@ data class Move(
     @Column(name = "effect")
     val effect: String?
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: MoveOutput
+        get() {
+            return MoveOutput(
+                name = name,
+                type = type,
+                damage = damage,
+                accuracy = accuracy,
+                pp = pp,
+                effect = effect
+            )
+        }
+
+}

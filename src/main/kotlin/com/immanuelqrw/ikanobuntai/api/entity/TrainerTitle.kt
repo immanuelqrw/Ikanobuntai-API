@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 import com.immanuelqrw.core.util.DateTimeFormatter
+import com.immanuelqrw.ikanobuntai.api.dto.output.TrainerTitle as TrainerTitleOutput
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -36,4 +37,17 @@ data class TrainerTitle(
     @Column(name = "lostOn", updatable = false)
     val lostOn: LocalDateTime?
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TrainerTitleOutput
+        get() {
+            return TrainerTitleOutput(
+                trainerName = trainer.name,
+                tierName = tierTitle.tier.name,
+                titleName = tierTitle.title.name,
+                wonOn = wonOn,
+                lostOn = lostOn
+            )
+        }
+
+}

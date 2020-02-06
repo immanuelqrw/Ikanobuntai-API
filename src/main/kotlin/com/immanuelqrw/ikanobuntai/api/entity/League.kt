@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 import com.immanuelqrw.core.util.DateTimeFormatter
+import com.immanuelqrw.ikanobuntai.api.dto.output.League as LeagueOutput
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.format.annotation.DateTimeFormat
@@ -53,4 +54,20 @@ data class League(
     @Column(name = "prizeMin", nullable = false)
     val prizeMin: Int
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: LeagueOutput
+        get() {
+            return LeagueOutput(
+                name = name,
+                type = type,
+                stage = stage,
+                tier = tier,
+                stdDev = stdDev,
+                kFactor = kFactor,
+                startedOn = startedOn,
+                prizeMin = prizeMin
+            )
+        }
+
+}

@@ -7,8 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 import com.immanuelqrw.core.util.DateTimeFormatter
-import org.hibernate.annotations.CreationTimestamp
-import org.springframework.data.annotation.CreatedDate
+import com.immanuelqrw.ikanobuntai.api.dto.output.ScheduledBattle as ScheduledBattleOutput
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -43,4 +42,18 @@ data class ScheduledBattle(
     @Column(name = "hasConcluded", nullable = false)
     val hasConcluded: Boolean = false
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: ScheduledBattleOutput
+        get() {
+            return ScheduledBattleOutput(
+                type = type,
+                defenderName = defender.name,
+                challengerName = challenger.name,
+                leagueName = league.name,
+                toBeFoughtOn = toBeFoughtOn,
+                hasConcluded = hasConcluded
+            )
+        }
+
+}

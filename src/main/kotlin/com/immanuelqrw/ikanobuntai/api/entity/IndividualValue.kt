@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.IndividualValue as IndividualValueOutput
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -30,4 +31,18 @@ data class IndividualValue(
     @Column(name = "speed", nullable = false)
     val speed: Int
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: IndividualValueOutput
+        get() {
+            return IndividualValueOutput(
+                hp = hp,
+                attack = attack,
+                defense = defense,
+                specialAttack = specialAttack,
+                specialDefense = specialDefense,
+                speed = speed
+            )
+        }
+
+}

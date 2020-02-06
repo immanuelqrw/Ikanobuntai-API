@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.immanuelqrw.core.entity.BaseUniqueEntity
 import com.immanuelqrw.core.util.DateTimeFormatter
+import com.immanuelqrw.ikanobuntai.api.dto.output.Battle as BattleOutput
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.format.annotation.DateTimeFormat
@@ -46,4 +47,18 @@ data class Battle(
     @Column(name = "foughtOn", updatable = false, nullable = false)
     val foughtOn: LocalDateTime
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: BattleOutput
+        get() {
+            return BattleOutput(
+                type = type,
+                defenderName = defender.name,
+                challengerName = challenger.name,
+                winnerName = winner?.name,
+                leagueName = league.name,
+                foughtOn = foughtOn
+            )
+        }
+
+}

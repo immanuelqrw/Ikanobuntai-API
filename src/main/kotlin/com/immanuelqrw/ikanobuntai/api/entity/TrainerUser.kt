@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.TrainerUser as TrainerUserOutput
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -26,4 +27,17 @@ data class TrainerUser(
     @Column(name = "oAuthId", nullable = false)
     val oAuthId: String
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TrainerUserOutput
+        get() {
+            return TrainerUserOutput(
+                name = name,
+                email = email,
+                passwordHash = passwordHash,
+                passwordSalt = passwordSalt,
+                oAuthId = oAuthId
+            )
+        }
+
+}

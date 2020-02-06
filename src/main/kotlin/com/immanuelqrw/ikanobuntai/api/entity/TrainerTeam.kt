@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.TrainerTeam as TrainerTeamOutput
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -22,4 +23,14 @@ data class TrainerTeam(
     @JoinColumn(name = "trainerId", referencedColumnName = "id", nullable = false)
     val trainer: Trainer
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TrainerTeamOutput
+        get() {
+            return TrainerTeamOutput(
+                name = name,
+                trainerName = trainer.name
+            )
+        }
+
+}

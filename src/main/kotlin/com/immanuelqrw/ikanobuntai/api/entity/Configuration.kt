@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.Configuration as ConfigurationOutput
 import javax.persistence.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,6 +22,15 @@ data class Configuration(
     val type: ConfigurationType
 
 ) : BaseUniqueEntity() {
+
+    val output: ConfigurationOutput
+        get() {
+            return ConfigurationOutput(
+                leagueFormat = leagueFormat.output,
+                value = value,
+                type = type
+            )
+        }
 
     val trueValue: Any?
         get() {

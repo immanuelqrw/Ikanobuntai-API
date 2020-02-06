@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.LeagueFormat as LeagueFormatOutput
 import javax.persistence.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,4 +17,14 @@ data class LeagueFormat(
     @Column(name = "format", nullable = false)
     val format: Format
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: LeagueFormatOutput
+        get() {
+            return LeagueFormatOutput(
+                leagueName = league.name,
+                format = format
+            )
+        }
+
+}

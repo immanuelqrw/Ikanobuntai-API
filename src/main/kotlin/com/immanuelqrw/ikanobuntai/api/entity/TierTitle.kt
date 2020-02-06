@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.TierTitle as TierTitleOutput
 import javax.persistence.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,4 +22,15 @@ data class TierTitle(
     @JoinColumn(name = "prizeId", referencedColumnName = "id", nullable = false)
     val prize: Prize
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TierTitleOutput
+        get() {
+            return TierTitleOutput(
+                tier = tier,
+                title = title,
+                prizeName = prize.name
+            )
+        }
+
+}

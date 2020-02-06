@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.TrainerPokemon as TrainerPokemonOutput
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -28,8 +29,7 @@ data class TrainerPokemon(
     @JoinColumn(name = "trainerId", referencedColumnName = "id", nullable = false)
     val trainer: Trainer,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
-    @JoinColumn(name = "tierId", referencedColumnName = "id", nullable = false)
+    @Column(name = "nature", nullable = false)
     val nature: Nature,
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
@@ -73,4 +73,27 @@ data class TrainerPokemon(
     @JoinColumn(name = "itemId", referencedColumnName = "id")
     val item: Item?
 
-) : BaseUniqueEntity()
+) : BaseUniqueEntity() {
+
+    val output: TrainerPokemonOutput
+        get() {
+            return TrainerPokemonOutput(
+                name = name,
+                pokemonGeneration = pokemonGeneration.output,
+                trainer = trainer.output,
+                nature = nature,
+                ability = ability.output,
+                individualValue = individualValue.output,
+                effortValue = effortValue.output,
+                move1 = move1.output,
+                move2 = move2?.output,
+                move3 = move3?.output,
+                move4 = move4?.output,
+                happiness = happiness,
+                isShiny = isShiny,
+                level = level,
+                item = item?.output
+            )
+        }
+
+}

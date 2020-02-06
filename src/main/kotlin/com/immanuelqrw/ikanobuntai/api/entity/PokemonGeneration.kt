@@ -2,6 +2,7 @@ package com.immanuelqrw.ikanobuntai.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.immanuelqrw.core.entity.BaseUniqueEntity
+import com.immanuelqrw.ikanobuntai.api.dto.output.PokemonGeneration as PokemonGenerationOutput
 import com.immanuelqrw.ikanobuntai.api.setOfNotNull
 import javax.persistence.*
 
@@ -57,6 +58,29 @@ data class PokemonGeneration(
     val spriteUri: String
 
 ) : BaseUniqueEntity() {
+
+    val output: PokemonGenerationOutput
+        get() {
+            return PokemonGenerationOutput(
+                pokemon = pokemon.output,
+                generation = generation,
+                mainType = mainType,
+                subType = subType,
+                stage = stage,
+                prevolvedPokemon = prevolvedPokemon?.output,
+                baseStatTotal = baseStat.total,
+                hpBaseStat = baseStat.hp,
+                attackBaseStat = baseStat.attack,
+                defenseBaseStat = baseStat.defense,
+                specialAttackBaseStat = baseStat.specialAttack,
+                specialDefenseBaseStat = baseStat.specialDefense,
+                speedBaseStat = baseStat.speed,
+                mainAbilityName = ability.main.name,
+                alternateAbilityName = ability.alternate?.name,
+                hiddenAbilityName = ability.hidden?.name,
+                spriteUri = spriteUri
+            )
+        }
 
     val types: Set<Type> by lazy {
         setOfNotNull(mainType, subType)
