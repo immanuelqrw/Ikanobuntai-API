@@ -3,49 +3,38 @@ package com.immanuelqrw.ikanobuntai.api.service.battle
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
 import com.immanuelqrw.ikanobuntai.api.dto.PokemonBattle
 import com.immanuelqrw.ikanobuntai.api.dto.TeamVerification
-import com.immanuelqrw.ikanobuntai.api.entity.Battle
-import com.immanuelqrw.ikanobuntai.api.entity.BattleResult
-import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
-import com.immanuelqrw.ikanobuntai.api.entity.League
-import com.immanuelqrw.ikanobuntai.api.entity.Trainer
-import com.immanuelqrw.ikanobuntai.api.service.search.BattleSeekService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
-import com.immanuelqrw.ikanobuntai.api.service.search.ScheduledBattleService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
+import com.immanuelqrw.ikanobuntai.api.entity.*
+import com.immanuelqrw.ikanobuntai.api.service.seek.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.UUID
 
 @Service
 class PokemonBattleService {
 
     @Autowired
-    private lateinit var battleService: BattleSeekService
+    private lateinit var battleSeekService: BattleSeekService
 
     @Autowired
-    private lateinit var trainerService: TrainerService
+    private lateinit var trainerSeekService: TrainerSeekService
 
     @Autowired
-    private lateinit var leagueTrainerService: LeagueTrainerService
+    private lateinit var leagueTrainerSeekService: LeagueTrainerSeekService
 
     @Autowired
     private lateinit var eloService: EloService
 
     @Autowired
-    private lateinit var trainerRatingService: TrainerRatingService
+    private lateinit var trainerRatingSeekService: TrainerRatingSeekService
 
     @Autowired
     private lateinit var rankService: RankService
 
     @Autowired
-    private lateinit var trainerTitleService: TrainerTitleService
+    private lateinit var trainerTitleSeekService: TrainerTitleSeekService
 
     @Autowired
-    private lateinit var leagueService: LeagueService
+    private lateinit var leagueSeekService: LeagueSeekService
 
     @Autowired
     private lateinit var battlePrizeService: BattlePrizeService
@@ -57,16 +46,14 @@ class PokemonBattleService {
     private lateinit var teamVerificationService: TeamVerificationService
 
     @Autowired
-    private lateinit var scheduledBattleService: ScheduledBattleService
+    private lateinit var scheduledBattleSeekService: ScheduledBattleSeekService
 
     fun create(pokemonBattle: PokemonBattle): Battle {
-        val league = leagueService.findByName(pokemonBattle.league)!!
+        val league: League = leagueSeekService.findByName(pokemonBattle.league)
 
-        val defenderId = trainerService.findByName(pokemonBattle.defender)!!.id!!
-        val defender = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, defenderId)!!
+        val defender: Trainer = trainerSeekService.findByName(pokemonBattle.defender)
 
-        val challengerId = trainerService.findByName(pokemonBattle.challenger)!!.id!!
-        val challenger = leagueTrainerService.findTrainerByLeagueTrainer(league.id!!, challengerId)!!
+        val challenger: Trainer = trainerSeekService.findByName(pokemonBattle.challenger)
 
         val winner: Trainer? = when(pokemonBattle.winner) {
             pokemonBattle.defender -> defender
@@ -75,17 +62,17 @@ class PokemonBattleService {
         }
 
         val battleVerification = BattleVerification(
-            defenderId = defender.id!!,
-            challengerId = challenger.id!!,
+            defenderName = defender.name,
+            challengerName = challenger.name,
             battleType = pokemonBattle.type,
-            leagueId = league.id!!,
+            leagueName = league.name,
             tierTitle = pokemonBattle.defendingTierTitle
         )
 
         val teamVerification = TeamVerification(
             defenderTeam = pokemonBattle.defenderTeam,
             challengerTeam = pokemonBattle.challengerTeam,
-            leagueId = league.id!!
+            leagueName = league.name
         )
 
         val battle = Battle(
@@ -97,7 +84,7 @@ class PokemonBattleService {
             foughtOn = pokemonBattle.foughtOn
         )
 
-        val battleResult = when (battle.winner) {
+        val battleResult: BattleResult = when (battle.winner) {
             defender -> BattleResult.WIN
             challenger -> BattleResult.LOSS
             else -> BattleResult.DRAW
@@ -106,12 +93,14 @@ class PokemonBattleService {
         // No Elo change during prize/title matches
         val battleVerificationType = battleVerificationService.acquireType(battleVerification)
         teamVerificationService.validateTeams(teamVerification)
-        val createdBattle: Battle = battleService.create(battle)
+        val createdBattle: Battle = battleSeekService.create(battle)
 
         when(battleVerificationType) {
             BattleVerificationType.TITLE -> {
                 pokemonBattle.run {
-                    updateTitle(challenger, battleResult, defendingTierTitle?.id!!, foughtOn)
+                    defendingTierTitle?.let {
+                        updateTitle(challenger, battleResult, defendingTierTitle.tier, defendingTierTitle.title, foughtOn)
+                    }
                 }
             }
             BattleVerificationType.PRIZE -> {
@@ -119,15 +108,15 @@ class PokemonBattleService {
             }
             else -> {
                 // Non League matches don't alter elo
-                updateEloRank(league, battleResult, defender.id!!, challenger.id!!)
+                updateEloRank(league, battleResult, defender.name, challenger.name)
             }
         }
 
         // - Consider returning custom output like changed elo, ranking, title of each trainer
         // ! Consider if validate that actual battle has same parameters as scheduled
         pokemonBattle.scheduledBattleId?.run {
-            val scheduledBattle = scheduledBattleService.find(this).copy(hasConcluded = true)
-            scheduledBattleService.replace(this, scheduledBattle)
+            val scheduledBattle = scheduledBattleSeekService.find(this).copy(hasConcluded = true)
+            scheduledBattleSeekService.replace(this, scheduledBattle)
         }
 
         return createdBattle
@@ -138,37 +127,37 @@ class PokemonBattleService {
         return battleResult == BattleResult.LOSS
     }
 
-    private fun updateTitle(challenger: Trainer, battleResult: BattleResult, defendingTierTitleId: UUID, foughtOn: LocalDateTime) {
+    private fun updateTitle(challenger: Trainer, battleResult: BattleResult, defendingTier: Tier, defendingTitle: Title, foughtOn: LocalDateTime) {
         if (hasChallengerWon(battleResult)) {
             // ! Need to refresh Grunts if Title Holder is auto-grunt
-            trainerTitleService.transferTitle(challenger, defendingTierTitleId, foughtOn)
+            trainerTitleSeekService.transferTitle(challenger, defendingTier, defendingTitle, foughtOn)
         }
     }
 
     private fun updatePrize(defender: Trainer, challenger: Trainer, battleResult: BattleResult, league: League)  {
         if (hasChallengerWon(battleResult)) {
-            battlePrizeService.grantPrize(defender.id!!, challenger, league)
+            battlePrizeService.grantPrize(defender.name, challenger, league)
         }
     }
 
-    private fun updateEloRank(league: League, battleResult: BattleResult, defenderId: UUID, challengerId: UUID) {
+    private fun updateEloRank(league: League, battleResult: BattleResult, defenderName: String, challengerName: String) {
         league.run {
-            val defenderRating = trainerRatingService.findByTrainerTier(defenderId, tier)!!
-            val challengerRating = trainerRatingService.findByTrainerTier(challengerId, tier)!!
+            val defenderRating: TrainerRating = trainerRatingSeekService.findByTrainerAndTier(defenderName, tier)
+            val challengerRating: TrainerRating = trainerRatingSeekService.findByTrainerAndTier(challengerName, tier)
 
             val (defenderEloChange, challengerEloChange) = eloService.calculateBattle(defenderRating.elo, challengerRating.elo, battleResult, kFactor)
 
             val defenderChange: Map<String, Any> = mapOf(
                 "elo" to defenderEloChange,
-                "rank" to rankService.checkRank(defenderId, defenderEloChange, defenderRating.rank, tier)
+                "rank" to rankService.checkRank(defenderName, defenderEloChange, defenderRating.rank, tier)
             )
-            trainerRatingService.modify(defenderRating.id!!, defenderChange)
+            trainerRatingSeekService.modify(defenderRating.id, defenderChange)
 
             val challengerChange: Map<String, Any> = mapOf(
                 "elo" to challengerEloChange,
-                "rank" to rankService.checkRank(challengerId, challengerEloChange, challengerRating.rank, tier)
+                "rank" to rankService.checkRank(challengerName, challengerEloChange, challengerRating.rank, tier)
             )
-            trainerRatingService.modify(challengerRating.id!!, challengerChange)
+            trainerRatingSeekService.modify(challengerRating.id, challengerChange)
         }
 
     }

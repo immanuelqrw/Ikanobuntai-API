@@ -4,19 +4,19 @@ import com.immanuelqrw.ikanobuntai.api.entity.Rank
 import com.immanuelqrw.ikanobuntai.api.entity.Rank.*
 import com.immanuelqrw.ikanobuntai.api.entity.Tier
 import com.immanuelqrw.ikanobuntai.api.entity.Title.*
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
+import com.immanuelqrw.ikanobuntai.api.entity.TrainerTitle
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerTitleSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class RankService {
 
     @Autowired
-    private lateinit var trainerTitleService: TrainerTitleService
+    private lateinit var trainerTitleSeekService: TrainerTitleSeekService
 
-    fun checkRank(trainerId: UUID, elo: Int, currentRank: Rank, tier: Tier): Rank {
-        val titleRank = checkTitle(trainerId, tier)
+    fun checkRank(trainerName: String, elo: Int, currentRank: Rank, tier: Tier): Rank {
+        val titleRank = checkTitle(trainerName, tier)
         val eloRank = checkElo(elo)
 
         val ranks = listOf(titleRank, eloRank, currentRank)
@@ -40,10 +40,10 @@ class RankService {
         }
     }
 
-    private fun checkTitle(trainerId: UUID, tier: Tier): Rank {
-        val trainerTitle = trainerTitleService.findByTrainerIdTier(trainerId, tier)
+    private fun checkTitle(trainerName: String, tier: Tier): Rank {
+        val trainerTitle: TrainerTitle  = trainerTitleSeekService.findByTrainerAndTier(trainerName, tier)
 
-        return when(trainerTitle?.tierTitle?.title) {
+        return when(trainerTitle.tierTitle.title) {
             WORLD_NOBLE,
             WORLD_CHAMPION -> MASTER
 

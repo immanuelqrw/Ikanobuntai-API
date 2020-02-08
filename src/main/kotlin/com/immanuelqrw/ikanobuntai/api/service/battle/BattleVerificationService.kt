@@ -2,41 +2,36 @@ package com.immanuelqrw.ikanobuntai.api.service.battle
 
 import com.immanuelqrw.ikanobuntai.api.TITLE_RANK_DIFFERENCE
 import com.immanuelqrw.ikanobuntai.api.dto.BattleVerification
-import com.immanuelqrw.ikanobuntai.api.entity.Battle
-import com.immanuelqrw.ikanobuntai.api.entity.BattleType
-import com.immanuelqrw.ikanobuntai.api.entity.BattleVerificationType
-import com.immanuelqrw.ikanobuntai.api.entity.Tier
-import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
+import com.immanuelqrw.ikanobuntai.api.entity.*
 import com.immanuelqrw.ikanobuntai.api.exception.InvalidBattleException
-import com.immanuelqrw.ikanobuntai.api.service.search.BattleSeekService
-import com.immanuelqrw.ikanobuntai.api.service.search.PrizeGruntService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerRatingService
+import com.immanuelqrw.ikanobuntai.api.service.seek.BattleSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.PrizeGruntSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerRatingSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class BattleVerificationService {
 
     @Autowired
-    private lateinit var battleService: BattleSeekService
+    private lateinit var battleSeekService: BattleSeekService
 
     @Autowired
-    private lateinit var prizeGruntService: PrizeGruntService
+    private lateinit var prizeGruntSeekService: PrizeGruntSeekService
 
     @Autowired
-    private lateinit var trainerRatingService: TrainerRatingService
+    private lateinit var trainerRatingSeekService: TrainerRatingSeekService
 
     fun acquireType(battleVerification: BattleVerification): BattleVerificationType? {
         battleVerification.run {
             if (battleType.hasPrize) {
-                validatePrizeBattle(challengerId, leagueId!!, tierTitle!!)
+                validatePrizeBattle(challengerName, leagueName, tierTitle!!)
                 return BattleVerificationType.PRIZE
             }
 
             return when (battleType) {
                 BattleType.TITLE -> {
-                    validateTitleBattle(defenderId, challengerId, tierTitle!!.tier)
+                    validateTitleBattle(defenderName, challengerName, tierTitle!!.tier)
                     BattleVerificationType.TITLE
                 }
                 BattleType.WILD -> BattleVerificationType.WILD
@@ -45,10 +40,10 @@ class BattleVerificationService {
         }
     }
 
-    private fun validatePrizeBattle(challengerId: UUID, leagueId: UUID, tierTitle: TierTitle) {
-        val prizeGrunts = prizeGruntService.findAllByLeagueTitle(leagueId, tierTitle.id!!).toSet()
-        val allBattles: List<Battle> = battleService.findAllByWinner(challengerId)
-        val gruntWins = allBattles.filter { wonBattle ->
+    private fun validatePrizeBattle(challengerName: String, leagueName: String, tierTitle: TierTitle) {
+        val prizeGrunts: Set<PrizeGrunt> = prizeGruntSeekService.findAllByLeagueAndTierAndTitle(leagueName, tierTitle.tier, tierTitle.title).toSet()
+        val allBattles: List<Battle> = battleSeekService.findAllByWinner(challengerName)
+        val gruntWins: Int = allBattles.filter { wonBattle ->
             val trainers = setOf(wonBattle.defender.id, wonBattle.challenger.id)
 
             wonBattle.type.isGrunt && prizeGrunts.any { prizeGrunt ->
@@ -61,11 +56,11 @@ class BattleVerificationService {
         }
     }
 
-    private fun validateTitleBattle(defenderId: UUID, challengerId: UUID, tier: Tier) {
-        val defenderRating = trainerRatingService.findByTrainerTier(defenderId, tier)!!
-        val challengerRating = trainerRatingService.findByTrainerTier(challengerId, tier)!!
+    private fun validateTitleBattle(defenderName: String, challengerName: String, tier: Tier) {
+        val defenderRating: TrainerRating = trainerRatingSeekService.findByTrainerAndTier(defenderName, tier)
+        val challengerRating: TrainerRating = trainerRatingSeekService.findByTrainerAndTier(challengerName, tier)
 
-        val rankDifference = defenderRating.rank.level - challengerRating.rank.level
+        val rankDifference: Int = defenderRating.rank.level - challengerRating.rank.level
 
         if (rankDifference > TITLE_RANK_DIFFERENCE) {
             throw InvalidBattleException("Rank too low to challenger for title")

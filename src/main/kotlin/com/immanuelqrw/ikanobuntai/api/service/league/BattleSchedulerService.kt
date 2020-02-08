@@ -39,11 +39,11 @@ class BattleSchedulerService {
         val challenger = leagueTrainerSeekService.findTrainerByLeagueAndTrainer(league.name, challengerName)
 
         val battleVerification = BattleVerification(
-            defender = defenderName,
-            challenger = challengerName,
+            defenderName = defenderName,
+            challengerName = challengerName,
             battleType = plannedBattle.type,
             // ! Create a generic WILD perpetual league and make non-nullable for WILD battles of each tier
-            league = league.name,
+            leagueName = league.name,
             tierTitle = plannedBattle.defendingTierTitle
         )
 

@@ -1,11 +1,12 @@
 package com.immanuelqrw.ikanobuntai.api.service.battle
 
 import com.immanuelqrw.ikanobuntai.api.dto.TeamVerification
+import com.immanuelqrw.ikanobuntai.api.entity.*
 import com.immanuelqrw.ikanobuntai.api.service.rule.FormatRuleService
-import com.immanuelqrw.ikanobuntai.api.service.search.ConfigurationService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueFormatService
-import com.immanuelqrw.ikanobuntai.api.service.search.PokemonTeamService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTeamService
+import com.immanuelqrw.ikanobuntai.api.service.seek.ConfigurationSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.LeagueFormatSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.PokemonTeamSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerTeamSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -13,33 +14,33 @@ import org.springframework.stereotype.Service
 class TeamVerificationService {
 
     @Autowired
-    private lateinit var trainerTeamService: TrainerTeamService
+    private lateinit var trainerTeamSeekService: TrainerTeamSeekService
 
     @Autowired
-    private lateinit var pokemonTeamService: PokemonTeamService
+    private lateinit var pokemonTeamSeekService: PokemonTeamSeekService
 
     @Autowired
-    private lateinit var leagueFormatService: LeagueFormatService
+    private lateinit var leagueFormatSeekService: LeagueFormatSeekService
 
     @Autowired
     private lateinit var formatRuleService: FormatRuleService
 
     @Autowired
-    private lateinit var configurationService: ConfigurationService
+    private lateinit var configurationSeekService: ConfigurationSeekService
 
     fun validateTeams(teamVerification: TeamVerification) {
-        val defenderTrainerTeam = trainerTeamService.findByName(teamVerification.defenderTeam)!!
-        val challengerTrainerTeam = trainerTeamService.findByName(teamVerification.challengerTeam)!!
-        val leagueFormats = leagueFormatService.findAllLeagueFormatsByLeague(teamVerification.leagueId!!)
+        val defenderTrainerTeam: TrainerTeam = trainerTeamSeekService.findByName(teamVerification.defenderTeam)
+        val challengerTrainerTeam: TrainerTeam = trainerTeamSeekService.findByName(teamVerification.challengerTeam)
+        val leagueFormats: List<LeagueFormat> = leagueFormatSeekService.findAllLeagueFormatsByLeague(teamVerification.leagueName)
 
-        val defenderPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(defenderTrainerTeam.id!!)
-        val challengerPokemonTeam = pokemonTeamService.findAllTrainerPokemonByTrainerTeam(challengerTrainerTeam.id!!)
+        val defenderPokemonTeam: List<TrainerPokemon> = pokemonTeamSeekService.findAllTrainerPokemonByTrainerTeam(defenderTrainerTeam.name)
+        val challengerPokemonTeam: List<TrainerPokemon> = pokemonTeamSeekService.findAllTrainerPokemonByTrainerTeam(challengerTrainerTeam.name)
 
         leagueFormats.forEach { leagueFormat ->
-            val format = leagueFormat.format
-            val formatConfiguration = configurationService.findByLeagueFormat(leagueFormat.id!!)
+            val format: Format = leagueFormat.format
+            val formatConfiguration: Configuration = configurationSeekService.findByLeagueFormat(leagueFormat.league.name, leagueFormat.format)
 
-            val formatLimiter: Any? = formatConfiguration?.trueValue
+            val formatLimiter: Any? = formatConfiguration.trueValue
 
             formatRuleService.validate(format, defenderPokemonTeam, formatLimiter)
             formatRuleService.validate(format, challengerPokemonTeam, formatLimiter)

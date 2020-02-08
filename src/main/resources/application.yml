@@ -1,22 +1,29 @@
 logging:
   level:
-    org.springframework: ERROR
+    org.springframework: DEBUG
     com.immanuelqrw.ikanobuntai.api: DEBUG
-
-  pattern:
-    console: %d{yyyy-MM-dd HH:mm:ss} - %msg%n
-    file: %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+    root: INFO
+server:
+  port : 8089
 spring:
   datasource:
-    jndi-name: java:/comp/env/jdbc/postgres
     url: jdbc:postgresql://localhost:5432/Ikanobuntai
-    username: root
-    password: root
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    data: classpath:test.sql
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL9Dialect
-        jdbc:
-          lob:
-            non_contextual_creation: true
-    generate-ddl: true
+        globally_quoted_identifiers: true
+    serialization:
+      write_dates_as_timestamps: false
+springdoc:
+  swagger-ui:
+    path: /api.html

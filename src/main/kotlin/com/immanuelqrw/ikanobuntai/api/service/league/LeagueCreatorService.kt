@@ -5,9 +5,9 @@ import com.immanuelqrw.ikanobuntai.api.dto.PokemonLeague
 import com.immanuelqrw.ikanobuntai.api.entity.BattleType
 import com.immanuelqrw.ikanobuntai.api.entity.League
 import com.immanuelqrw.ikanobuntai.api.entity.LeagueTrainer
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueService
-import com.immanuelqrw.ikanobuntai.api.service.search.LeagueTrainerService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerService
+import com.immanuelqrw.ikanobuntai.api.service.seek.LeagueSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.LeagueTrainerSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -17,13 +17,13 @@ import java.time.ZoneOffset
 class LeagueCreatorService {
 
     @Autowired
-    private lateinit var leagueService: LeagueService
+    private lateinit var leagueSeekService: LeagueSeekService
 
     @Autowired
-    private lateinit var trainerService: TrainerService
+    private lateinit var trainerSeekService: TrainerSeekService
 
     @Autowired
-    private lateinit var leagueTrainerService: LeagueTrainerService
+    private lateinit var leagueTrainerSeekService: LeagueTrainerSeekService
 
     @Autowired
     private lateinit var battleSchedulerService: BattleSchedulerService
@@ -42,7 +42,7 @@ class LeagueCreatorService {
             )
         }
 
-        val createdLeague = leagueService.create(league)
+        val createdLeague = leagueSeekService.create(league)
 
         addTrainersToLeague(createdLeague, pokemonLeague.trainers)
         generateBattles(createdLeague.name, pokemonLeague.trainers)
@@ -72,13 +72,13 @@ class LeagueCreatorService {
 
     private fun addTrainersToLeague(league: League, trainerNames: Collection<String>) {
         trainerNames.forEach { trainerName ->
-            trainerService.findByName(trainerName)?.let { trainer ->
+            trainerSeekService.findByName(trainerName).let { trainer ->
                 val leagueTrainer = LeagueTrainer(
                     league = league,
                     trainer = trainer
                 )
 
-                leagueTrainerService.create(leagueTrainer)
+                leagueTrainerSeekService.create(leagueTrainer)
             }
         }
     }

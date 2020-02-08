@@ -1,26 +1,23 @@
 package com.immanuelqrw.ikanobuntai.api.service.battle
 
-import com.immanuelqrw.ikanobuntai.api.entity.League
-import com.immanuelqrw.ikanobuntai.api.entity.Trainer
-import com.immanuelqrw.ikanobuntai.api.entity.TrainerPrize
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerPrizeService
-import com.immanuelqrw.ikanobuntai.api.service.search.TrainerTitleService
+import com.immanuelqrw.ikanobuntai.api.entity.*
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerPrizeSeekService
+import com.immanuelqrw.ikanobuntai.api.service.seek.TrainerTitleSeekService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class BattlePrizeService {
 
     @Autowired
-    private lateinit var trainerPrizeService: TrainerPrizeService
+    private lateinit var trainerPrizeSeekService: TrainerPrizeSeekService
 
     @Autowired
-    private lateinit var trainerTitleService: TrainerTitleService
+    private lateinit var trainerTitleSeekService: TrainerTitleSeekService
 
-    fun grantPrize(defenderId: UUID, challenger: Trainer, league: League) {
-        val trainerTitle = trainerTitleService.findByTrainerIdTier(defenderId, league.tier)
-        val prize = trainerTitle!!.tierTitle.prize
+    fun grantPrize(defenderName: String, challenger: Trainer, league: League) {
+        val trainerTitle: TrainerTitle = trainerTitleSeekService.findByTrainerAndTier(defenderName, league.tier)
+        val prize: Prize = trainerTitle.tierTitle.prize
 
         val trainerPrize = TrainerPrize(
             trainer = challenger,
@@ -28,7 +25,7 @@ class BattlePrizeService {
             league = league
         )
 
-        trainerPrizeService.create(trainerPrize)
+        trainerPrizeSeekService.create(trainerPrize)
     }
 
 }

@@ -5,14 +5,14 @@ import com.immanuelqrw.ikanobuntai.api.entity.TierTitle
 
 data class BattleVerification(
 
-    val defender: String,
+    val defenderName: String,
 
-    val challenger: String,
+    val challengerName: String,
 
     val battleType: BattleType,
 
-    val league: String,
+    val leagueName: String,
 
-    val tierTitle: TierTitle?
+    val tierTitle: TierTitle? = null
 
 )

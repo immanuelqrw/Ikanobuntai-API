@@ -18,8 +18,8 @@ class PokemonBattleController {
     private lateinit var pokemonBattleService: PokemonBattleService
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun create(@RequestBody entity: PokemonBattle): Battle {
-        return pokemonBattleService.create(entity)
+    fun create(@RequestBody pokemonBattle: PokemonBattle): Battle {
+        return pokemonBattleService.create(pokemonBattle)
     }
 
 }
