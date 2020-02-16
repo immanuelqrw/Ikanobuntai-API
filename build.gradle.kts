@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val projectGroup = "com.immanuelqrw.ikanobuntai"
 val projectArtifact = "ikanobuntai-api"
-val projectVersion = "0.0.1-pre-alpha"
+val projectVersion = "0.0.2-pre-alpha"
 
 group = projectGroup
 version = projectVersion

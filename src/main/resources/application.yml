@@ -4,7 +4,7 @@ logging:
     com.immanuelqrw.ikanobuntai.api: DEBUG
     root: INFO
 server:
-  port : 8089
+  port : 8010
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/Ikanobuntai
