@@ -20,8 +20,8 @@ class PokemonTeamSeekService : BaseUniqueService<PokemonTeam>(PokemonTeam::class
         }
     }
 
-    fun findTrainerTeamsByTrainerPokemon(trainerName: String): List<TrainerTeam> {
-        return pokemonTeamRepository.findAllByTrainerTeamNameAndRemovedOnIsNull(trainerName).map { pokemonTeam ->
+    fun findAllTrainerTeamsByTrainer(trainerName: String): List<TrainerTeam> {
+        return pokemonTeamRepository.findAllByTrainerPokemonTrainerNameAndRemovedOnIsNull(trainerName).map { pokemonTeam ->
             pokemonTeam.trainerTeam
         }
     }

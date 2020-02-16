@@ -86,6 +86,7 @@ val packages: Array<Package> = arrayOf(
 
 val testPackages: Array<Package> = arrayOf(
     Package("org.hibernate", "hibernate-testing", "5.3.7.Final"),
+    Package("com.nhaarman.mockitokotlin2", "mockito-kotlin", "2.2.0"),
     *jUnitPackages,
     *springTestPackages,
     *nucleusTestPackages

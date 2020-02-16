@@ -14,7 +14,7 @@ class ConfigurationSeekService : BaseUniqueService<Configuration>(Configuration:
     @Autowired
     private lateinit var configurationRepository: ConfigurationRepository
 
-    fun findByLeagueFormat(leagueName: String, format: Format): Configuration {
+    fun findByLeagueAndFormat(leagueName: String, format: Format): Configuration {
         return configurationRepository.findByLeagueFormatLeagueNameAndLeagueFormatFormatAndRemovedOnIsNull(leagueName, format)
             ?: throw EntityNotFoundException()
     }

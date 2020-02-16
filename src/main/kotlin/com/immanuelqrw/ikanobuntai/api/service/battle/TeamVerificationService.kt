@@ -38,7 +38,7 @@ class TeamVerificationService {
 
         leagueFormats.forEach { leagueFormat ->
             val format: Format = leagueFormat.format
-            val formatConfiguration: Configuration = configurationSeekService.findByLeagueFormat(leagueFormat.league.name, leagueFormat.format)
+            val formatConfiguration: Configuration = configurationSeekService.findByLeagueAndFormat(leagueFormat.league.name, leagueFormat.format)
 
             val formatLimiter: Any? = formatConfiguration.trueValue
 

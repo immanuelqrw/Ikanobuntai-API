@@ -1,37 +1,35 @@
-version: '3.7'
+version: "3.7"
 services:
-  app-service:
-    build: .
-    restart: always
-    ports:
-      - 8080:8080
-    depends_on:
-      - app-database
-    networks:
-      app-network:
-        aliases:
-          - app-service
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DATABASE}:5432/rank?useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=${DATABASE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
-
-  app-database:
-    image: postgres:11.3-alpine
-    networks:
-      app-network:
-        aliases:
-          - app-database
-    restart: always
-    environment:
-      POSTGRES_USERNAME: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+  db:
+    container_name: ikano
+    image: postgres
     volumes:
-      - db-data:/var/lib/postgresql/data/
-      - ./createDatabase.sql:/docker-entrypoint-initdb.d/createDatabase.sql # Alphabetical order -- use leading numbers
+      - ikano:/var/lib/postgresql/data
     ports:
-      - 5432
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=Ikanobuntai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    networks:
+      - ikanonet
+  ikanobuntai-api:
+    container_name: ikanobuntai-api
+    build:
+      context: .
+      dockerfile: Dockerfile.base.base
+    image: ikanobuntai-api:latest
+    depends_on:
+      - db
+    ports:
+      - "8089:8089"
+    logging:
+      driver: json-file
+    networks:
+      - ikanonet
 volumes:
-  db-data:
+  ikano: {}
 networks:
-  app-network:
+  ikanonet:
+    driver: bridge
